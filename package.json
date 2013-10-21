@@ -1,11 +1,15 @@
 {
-  "name": "c6-sandbox",
-  "version": "0.0.0",
-  "description": "Connect middleware and angular app for developing cinema6 interactive video experiences in a mocked environment.",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git@bitbucket.org:cinema6/c6sandbox.git"
-  },
-  "author": "Joshua D. Minzner"
+    "name": "c6-sandbox",
+    "version": "0.0.0",
+    "description": "Connect middleware and angular app for developing cinema6 interactive video experiences in a mocked environment.",
+    "main": "index.js",
+    "repository": {
+        "type": "git",
+        "url": "git@bitbucket.org:cinema6/c6sandbox.git"
+    },
+    "author": "Joshua D. Minzner",
+    "devDependencies": {
+        "grunt": "0.4.x",
+        "matchdep": "0.3.x"
+    }
 }
