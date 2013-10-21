@@ -1,15 +1,15 @@
 (function() {
     'use strict';
 
+
     angular.module('c6.sandbox', ['c6.ui'])
-        .controller('AppController', ['$scope', 'SandboxConfig', 'C6ExperienceService', 'c6AniCache', 'c6Computed',
-                            function(  $scope,   SandboxConfig,   C6ExperienceService,   c6AniCache,   c) {
+        .controller('AppController', ['$scope', 'SandboxConfig', 'C6ExperienceService', 'c6AniCache', 'c6Computed', '$window',
+                            function(  $scope,   SandboxConfig,   C6ExperienceService,   c6AniCache,   c,            $window) {
             var self = this;
 
             function getExperience(config) {
                 var experience = (config.experiences && config.experiences[0]) || {};
 
-                experience.appUrl = config.appUrl;
                 experience.id = 'sandbox';
 
                 return experience;
@@ -81,10 +81,34 @@
             $scope.AppCtrl = this;
         }])
 
-        .factory('SandboxConfig', ['$document', function($document) {
-            var config = $document[0].getElementById('c6_config').innerHTML;
+        .factory('SandboxConfig', ['$document', '$window', function($document, $window) {
+            var config = $document[0].getElementById('c6_config').innerHTML,
+                configObject = JSON.parse(config);
 
-            return JSON.parse(config);
+            function C6Sandbox() {
+                var settings = JSON.parse($window.localStorage.getItem('__c6_sandbox__'));
+
+                function writeSettings() {
+                    $window.localStorage.setItem('__c6_sandbox__', JSON.stringify(settings));
+                }
+
+                if (!settings) {
+                    settings = {
+                        experienceIndex: 0
+                    };
+
+                    writeSettings();
+                }
+
+                this.getExperiences = function() {
+                    return configObject.experiences;
+                };
+            }
+
+            window.c6Sandbox = new C6Sandbox();
+
+
+            return configObject;
         }])
 
         .directive('c6Experience', ['C6ExperienceService', function(C6ExperienceService) {
