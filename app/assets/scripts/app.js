@@ -2,16 +2,81 @@
     'use strict';
 
     angular.module('c6.sandbox', ['c6.ui'])
-        .controller('AppController', ['$scope', 'SandboxConfig', function($scope, SandboxConfig) {
+        .controller('AppController', ['$scope', 'SandboxConfig', 'C6ExperienceService', 'c6AniCache', 'c6Computed',
+                            function(  $scope,   SandboxConfig,   C6ExperienceService,   c6AniCache,   c) {
+            var self = this;
+
             function getExperience(config) {
                 var experience = (config.experiences && config.experiences[0]) || {};
 
                 experience.appUrl = config.appUrl;
+                experience.id = 'sandbox';
 
                 return experience;
             }
 
+            this.activeExperience = false;
+
             this.experience = getExperience(SandboxConfig);
+
+            this.panels = {
+                show: false,
+                duration: 0.6
+            };
+
+            this.experienceWantsBar = false;
+            this.c6BarInUse = false;
+            this.showC6Bar = c($scope, function(barInUse, experienceWantsBar, activeExperience) {
+                if (!activeExperience) {
+                    return false;
+                }
+
+                if (barInUse) {
+                    return true;
+                }
+
+                return experienceWantsBar;
+            }, ['AppCtrl.c6BarInUse', 'AppCtrl.experienceWantsBar', 'AppCtrl.activeExperience']);
+
+            this.gotoStart = function() {
+                C6ExperienceService.getSession('sandbox').then(function(session) {
+                    session.gotoState('start');
+                });
+            };
+
+            C6ExperienceService.getSession('sandbox').then(function(session) {
+                session.on('currentUrl', function(data, respond) {
+                    respond('http://www.cinema6.com/#/experiences/sandbox');
+                });
+
+                session.on('transitionState', function(wantState, respond) {
+                    var unregister,
+                        active = self.activeExperience,
+                        config = angular.isObject(wantState) ? wantState : { enter: wantState, duration: 0.6 },
+                        panelsEvent = config.enter ? 'panelsDown' : 'panelsUp';
+
+                    c6AniCache.enabled(true);
+
+                    self.panels.duration = config.duration;
+                    self.panels.show = config.enter;
+
+                    unregister = $scope.$on(panelsEvent, function() {
+                        if (config.enter && !active) {
+                            self.activeExperience = true;
+                        } else if (config.enter && active) {
+                            self.activeExperience = false;
+                        }
+                        c6AniCache.enabled(false);
+
+                        unregister();
+                        respond();
+                    });
+                });
+
+                session.on('requestBar', function(showBar) {
+                    self.experienceWantsBar = showBar;
+                });
+            });
 
             $scope.AppCtrl = this;
         }])

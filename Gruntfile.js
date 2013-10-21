@@ -5,12 +5,16 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
         smadd : {
+            gsap        : { git : 'git@github.com:cinema6/GreenSock-JS.git' },
             angular  : { git : 'git@github.com:cinema6/angular.js.git' },
-            c6ui     : { git : 'git@github.com:cinema6/c6ui.git' }
+            c6ui     : { git : 'git@github.com:cinema6/c6ui.git' },
+            jquery      : { git : 'git@github.com:cinema6/jquery.git' }
         },
         smbuild : {
+            gsap    : { options : { args : [], buildDir : 'src/minified', npm : false, grunt : false } },
             angular : { options : { args : ['package'], buildDir : 'build'  } },
-            c6ui    : { options : { args : ['build'],   buildDir : 'dist' } }
+            c6ui    : { options : { args : ['build'],   buildDir : 'dist' } },
+            jquery  : { options : { args : [],          buildDir : 'dist' } }
         }
     });
 

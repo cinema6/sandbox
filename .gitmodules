@@ -4,3 +4,9 @@
 [submodule "vendor/c6ui"]
 	path = vendor/c6ui
 	url = git@github.com:cinema6/c6ui.git
+[submodule "vendor/gsap"]
+	path = vendor/gsap
+	url = git@github.com:cinema6/GreenSock-JS.git
+[submodule "vendor/jquery"]
+	path = vendor/jquery
+	url = git@github.com:cinema6/jquery.git

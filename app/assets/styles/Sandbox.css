@@ -1,3 +1,8 @@
+.no-scroll {
+    overflow: hidden;
+    height: 100%;
+}
+
 .experience-frame {
     width: 100%; height: 100%;
     border: none;
@@ -7,3 +12,70 @@
     .experience-frame--active {
         position: fixed; top: 0; left: 0; z-index: 100;
     }
+
+/*  ==========================================================================
+    c6-bar styles
+    ========================================================================== */
+    .c6-bar__container {
+        position: absolute; top: 0px;
+        width: 100%; height: 2.25em;
+
+        -ms-transition: top 0.5s; -moz-transition: top 0.5s; -o-transition: top 0.5s; -webkit-transition: top 0.5s; transition: top 0.5s;
+    }
+        .c6-bar__container--offscreen {
+            top: -2.25em;
+        }
+    .c6-bar__group {
+        background:#232527; height:2.25em; width:100%; position:absolute; z-index:1000; top:0; line-height: 1;
+    }
+        .c6-bar__inner {
+            margin:0; padding:0; list-style: none;
+        }
+        .c6-bar__logo {
+            border-right:1px solid #2a2c2e; float:left;
+        }
+            .c6b-logo__link {
+                display:block; padding:0.125em 0.9375em; border-right:1px solid #181a1b; 
+                -moz-transition:background-color 1s; -webkit-transition:background-color 1s; -o-transition:background-color 1s; transition:background-color 1s;
+            }
+                .c6b-logo__link img {
+                    display: block; width:2em; height:2em;
+                }
+        .c6-bar__app-space {
+            float:left;
+        }
+            .c6-bar__app-title {
+                width:6.75em; height:0.75em; display: block; margin:0.8125em 0 0 0.75em; opacity:0.4;
+                background: 0 0 no-repeat; background-size: contain;
+                -moz-transition:opacity 1s; -webkit-transition:opacity 1s; -o-transition:opacity 1s; transition:opacity 1s;
+            }
+        .c6-settings__group {
+            border-left:1px solid #181a1b; float:right;
+        }
+            .c6-bar__settings {
+                display:block; padding:0.5em 0.9375em; border-left:1px solid #2a2c2e;
+                -moz-transition:background-color 1s; -webkit-transition:background-color 1s; -o-transition:background-color 1s; transition:background-color 1s;
+                cursor:pointer;
+            }
+                .c6-settings__gear-icon {
+                    display: block; width:1.25em; height:1.25em; background:url('../img/c6-sprite--alpha.png') -100px 0 no-repeat; background-size:15.625em 15.625em; float:left; opacity:0.2;
+                    -moz-transition:opacity 1s; -webkit-transition:opacity 1s; -o-transition:opacity 1s; transition:opacity 1s;
+                }
+                .c6-settings__dropdown-icon {
+                    display: block; width:0.625em; height:0.625em; background:url('../img/c6-sprite--alpha.png') -6.25em -1.5625em no-repeat; background-size:15.625em 15.625em; margin:0.3125em 0 0 0.3125em; float:left; opacity:0.2;
+                    -moz-transition:opacity 1s, transform 0.3s; -webkit-transition:opacity 1s, transform 0.3s; -o-transition:opacity 1s, transform 0.3s; transition:opacity 1s, transform 0.3s;
+                }
+                    .c6-settings__dropdown-icon--open {
+                        transform:rotate(180deg); -ms-transform:rotate(180deg); /* IE 9 */ -webkit-transform:rotate(180deg); /* Safari and Chrome */
+                    }
+        .c6-settings__dropdown {
+            margin:0; border-bottom:1px solid black; padding:0; top:2.571em; right:0; z-index:5000; font-size:0.875em; /* 14px */
+            list-style:none; position: absolute;
+        }
+            .c6-settings__dropdown-item {
+                margin:0; padding:0; border-top: 1px solid black;
+            }
+            .c6-settings__dropdown-btn {
+                border:0; background:#232527; color:#ccc; text-decoration: none; padding:0.714em 1em; cursor:pointer; width:7.143em; display: block;
+                -moz-transition:background-color 1s, color 1s; -webkit-transition:background-color 1s, color 1s; -o-transition:background-color 1s, color 1s; transition:background-color 1s, color 1s;
+            }

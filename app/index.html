@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="c6.sandbox" ng-controller="AppController">
+<html ng-app="c6.sandbox" ng-controller="AppController" ng-class="{'no-scroll': AppCtrl.activeExperience}">
     <head>
         <title>Cinema6 Site Sandbox</title>
 
@@ -7,15 +7,13 @@
         <link rel="stylesheet" href="./assets/lib/c6ui/style/css/c6__main.css">
         <link rel="stylesheet" href="./assets/styles/Sandbox.css">
     </head>
-    <body>
-        <c6-panels show="ExperienceCtrl.panels.show" duration="ExperienceCtrl.panels.duration"></c6-panels>
+    <body ng-class="{'no-scroll': AppCtrl.activeExperience}">
+        <c6-panels show="AppCtrl.panels.show" duration="AppCtrl.panels.duration"></c6-panels>
         <div class="c6-bar__container c6-bar__container--offscreen"
-            ng-mouseenter="ExperienceCtrl.c6BarInUse = true"
-            ng-mouseleave="ExperienceCtrl.c6BarInUse = false"
-            ng-class="{'c6-bar__container--offscreen': !ExperienceCtrl.showC6Bar()}">
-            <c6-bar experience-name="{{ExperienceCtrl.content.name}}"
-                logo-url="{{ExperienceCtrl.content.img.logo && assets(ExperienceCtrl.content.img.logo)}}"
-                close="ExperienceCtrl.gotoStart">
+            ng-mouseenter="AppCtrl.c6BarInUse = true"
+            ng-mouseleave="AppCtrl.c6BarInUse = false"
+            ng-class="{'c6-bar__container--offscreen': !AppCtrl.showC6Bar()}">
+            <c6-bar experience-name="{{AppCtrl.experience.name}}" close="AppCtrl.gotoStart">
             </c6-bar>
         </div>
 
@@ -23,21 +21,14 @@
             <nav class="container">
                 <ul class="nav-mobile clearfix tk--hdr">
                     <li class="nav-mobile__cinema6">
-                        <a ui-sref="{{homeSref}}" title="Cinema6" class="nav-mobile__cinema6--link"><img src="assets/img/c6-brand--horizontal@2x.png" width="100%" alt="Cinema6"><span class="ir">Cinema6</span></a>
+                        <a href="#" title="Cinema6" class="nav-mobile__cinema6--link"><img src="assets/img/c6-brand--horizontal@2x.png" width="100%" alt="Cinema6"><span class="ir">Cinema6</span></a>
                     </li>
                     <li class="nav-mobile__dropdown">
-                        <button ng-click="toggleSlide()" class="nav-mobile__dropdown--btn" ng-class="{'nav-mobile__dropdown--active': slideOpen}" type="button"><span class="ir">Dropdown</span></button>
+                        <button class="nav-mobile__dropdown--btn" ng-class="{'nav-mobile__dropdown--active': slideOpen}" type="button"><span class="ir">Dropdown</span></button>
                     </li>
                 </ul>
                 <ul class="nav-prime clearfix tk--hdr">
-                    <li class="nav-prime__cinema6"><a ui-sref="{{homeSref}}" title="Cinema6" class="nav-prime__cinema6--link"><img src="assets/img/c6-brand--horizontal@2x.png" width="100%" alt="Cinema6"><span class="ir">Cinema6</span></a></li>
-                    <li class="np_main-links__group clearfix">
-                        <ul class="np_main-links">
-                            <li ng-repeat="link in nav" class="nav-prime__item">
-                                <a ui-sref="{{link.sref}}" title="{{link.name}}" class="nav-prime__item--link">{{link.name}}</a>
-                            </li>
-                        </ul>
-                    </li>
+                    <li class="nav-prime__cinema6"><a href="#" title="Cinema6" class="nav-prime__cinema6--link"><img src="assets/img/c6-brand--horizontal@2x.png" width="100%" alt="Cinema6"><span class="ir">Cinema6</span></a></li>
                     <li class="nav-prime__search">
                         <form class="nav-search__group clearfix">
                             <input class="nav-search__text-box" type="search" name="search" value="Search Cinema6">
@@ -49,7 +40,7 @@
         </header><!--.masthead__group-->
 
         <section class="landing-hero__group">
-            <c6-experience content="AppCtrl.experience"></c6-experience>
+            <c6-experience content="AppCtrl.experience" active="AppCtrl.activeExperience"></c6-experience>
         </section><!--.hero__group-->
 
         <div ng-if="!AppCtrl.activeExperience" class="container">
@@ -89,9 +80,19 @@
             </div>
         </div>
 
+        <script>
+            window.__C6_APP_BASE_URL__ = 'assets';
+        </script>
+
+        <script src="./assets/lib/jquery/jquery.min.js"></script>
+        <script src="./assets/lib/gsap/TweenMax.min.js"></script>
         <script src="./assets/lib/angular/angular.min.js"></script>
         <script src="./assets/lib/c6ui/c6ui.js"></script>
+        <script src="./assets/lib/c6ui/bar/c6bar.js"></script>
+        <script src="./assets/lib/c6ui/computed/computed.js"></script>
         <script src="./assets/lib/c6ui/events/emitter.js"></script>
+        <script src="./assets/lib/c6ui/anicache/anicache.js"></script>
+        <script src="./assets/lib/c6ui/panels/panels.js"></script>
         <script src="./assets/lib/c6ui/postmessage/postmessage.js"></script>
         <script src="./assets/scripts/app.js"></script>
         <!-- C6_SANDBOX_CONFIG -->
