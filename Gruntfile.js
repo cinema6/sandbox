@@ -1,3 +1,5 @@
+var path = require('path');
+
 module.exports = function(grunt) {
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 

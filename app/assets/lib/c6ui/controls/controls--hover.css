@@ -1,0 +1,24 @@
+/*  ==========================================================================
+    hover styles
+    ========================================================================== */
+
+    /* ---- play/pause styles ---- */
+    .controls__btnPlayPause:hover {background: #313437;}
+
+		.controls__btnPlay-icon:hover {opacity: 1;}
+
+		.controls__btnPause-icon:hover {opacity: 1;}
+
+
+	/* ---- seek styles ---- */
+	.controls__btnReturn-icon:hover {opacity: 1;}
+
+	.controls__btnFullscreen-icon:hover {opacity: 1;}
+
+
+	/* ---- volume styles ---- */
+	.volume__btn:hover {background: #313437;}
+
+		.volume__btnVolume-icon:hover { opacity: 1; }
+
+	

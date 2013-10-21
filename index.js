@@ -1,27 +1,36 @@
 module.exports = function(config) {
     var path = require('path'),
         fs = require('fs'),
-        url = require('url');
+        url = require('url'),
+        send = require('send');
 
     return function(req, res, next) {
         var filepath = url.parse(req.url).pathname;
 
         filepath = (filepath === '/') ? '/index.html' : filepath;
 
-        fs.readFile(path.resolve(__dirname, ('app' + filepath)), 'utf8', function(err, file) {
-            if (err) throw err;
+        if (filepath === '/index.html') {
+            fs.readFile(path.resolve(__dirname, ('app' + filepath)), function(err, file) {
+                var fileString = (file instanceof Buffer) ? file.toString() : file;
 
-            if (filepath === '/index.html') {
-                file = file.replace('<!-- C6_SANDBOX_CONFIG -->', (function() {
+                fileString = fileString.replace('<!-- C6_SANDBOX_CONFIG -->', (function() {
                     return [
                         '<script id="c6_config" type="application/json">',
                             JSON.stringify(config),
                         '</script>'
                     ].join('\n');
                 })());
-            }
 
-            res.end(file);
-        });
+                res.writeHead(200, { 'content-type': 'text/html', 'content-length': Buffer.byteLength(fileString) });
+                res.end(fileString);
+            });
+        } else {
+            send(req, url.parse(req.url).pathname)
+                .root(path.resolve(__dirname, 'app'))
+                .pipe(res)
+                .on('error', function(err) {
+                    throw err;
+                });
+        }
     };
 };

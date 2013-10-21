@@ -1,0 +1,50 @@
+<div class="controls__group">
+	<div ng-if="state.showPlayPause()" class="controls__btnPlayPause" title="Play/Pause" ng-click="handle.playPause()">
+		<button class="controls__btn{{state.playing ? 'Pause' : 'Play'}}-icon"><span class="ir">{{state.playing ? 'Pause' : 'Play'}}</span></button>
+	</div>
+
+	<div class="controls__seek" ng-style="state.seekbarStyles()" ng-mouseup="handle.stopSeeking()" ng-mouseleave="handle.stopSeeking()">
+		<button ng-repeat="button in buttons()"
+			class="controls__btn{{state.buttonsConfig()[$index].class}}-{{state.buttonsConfig()[$index].disabled ? 'disabled' : 'icon'}}"
+			ng-click="delegate()[button]()"
+			title="{{state.buttonsConfig()[$index].class}}">
+			<span class="ir">{{state.buttonsConfig()[$index].class}}</span>
+		</button>
+		<!--<button ng-if="state.hasButton('fullscreen')" class="controls__btnFullscreen-icon" ng-click="delegate().fullscreen()" title="Return"><span class="ir">Fullscreen</span></button>-->
+		<div class="controls__slider" ng-style="{'margin-left': state.leftMargin() + 'px', 'margin-right': state.rightMargin() + 'px'}" ng-click="handle.seekbarClick($event)">
+
+			<div class="controls__slider-shadow">&nbsp;</div>
+			<!-- branching video example-->
+			<c6-controls-node ng-repeat="node in state.nodes()" model="node" handlers="handle.node"></c6-controls-node>
+			<div class="controls__slider-past" ng-style="{width: state.pastSegmentsLength() + '%'}">&nbsp;</div>
+
+			<!-- annotation video example
+			<div class="controls__annotation" style="left: 20%;">&nbsp;</div>
+			<div class="controls__annotation" style="left: 23%;">&nbsp;</div>
+			<div class="controls__annotation" style="left: 38%;">&nbsp;</div>
+			<div class="controls__annotation" style="left: 48%;">&nbsp;</div> -->
+
+			<div class="controls__slider-active" ng-style="{width: (state.playheadPosition || 0) + '%'}">&nbsp;</div>
+			<div class="controls__playhead" ng-style="{left: state.playheadPosition + '%'}" ng-mousedown="handle.startSeeking()">&nbsp;</div>
+			<div ng-repeat="segment in state.segments()" class="controls__slider-buffer" ng-style="{width: (segment.__c6Controls.position.width() || 0) + '%', left: segment.__c6Controls.position.left() + '%'}">&nbsp;</div>
+		</div>
+
+	</div>
+		<div ng-if="state.showVolume()" class="volume__btn" title="Volume" ng-mouseenter="handle.volume.show()" ng-mouseleave="handle.volume.hide()">
+			<!--<button class="volume__btn{{state.volume.levelTier()}}-icon" ng-click="handle.volume.muteUnmute()"><span class="ir">Mute/Unmute</span></button>-->
+
+			<button class="volume__btnVolume-icon" ng-mouseenter="handle.volume.show()" ng-click="handle.volume.muteUnmute()"><span class="ir">Volume</span>
+				<div class="volume__btnVolume-low" ng-style="{opacity: state.volume.tiers.low()}"><span class="ir">Low</span></div>
+				<div class="volume__btnVolume-med" ng-style="{opacity: state.volume.tiers.med()}"><span class="ir">Med</span></div>
+				<div class="volume__btnVolume-high" ng-style="{opacity: state.volume.tiers.high()}"><span class="ir">High</span></div>
+				<div class="volume__btnVolume-mute" ng-style="{opacity: state.volume.tiers.mute()}"><span class="ir">High</span></div>
+			</button>
+			
+			<div class="volume__box" style="display: none;" ng-mouseenter="handle.volume.show()" ng-mouseleave="handle.volume.hide(); handle.volume.stopSeeking();" ng-mouseup="handle.volume.stopSeeking()" ng-show="state.volume.show">
+			<div class="volume__slider" ng-click="handle.volume.seekbarClick($event)">
+				<div class="volume__slider-active" ng-style="{height: (state.volume.playheadPosition || 0) + '%'}">&nbsp;</div>
+				<div class="volume__playhead" ng-style="{bottom: (state.volume.playheadPosition || 0) + '%'}" ng-mousedown="handle.volume.startSeeking()">&nbsp;</div>
+			</div>
+		</div>
+		</div>
+</div>

@@ -1,0 +1,107 @@
+/*  ==========================================================================
+    hover styles
+    ========================================================================== */
+    a:hover {
+        color:#00b9ff;
+    }
+
+/*  ==========================================================================
+    masthead styles
+    ========================================================================== */
+    .nav-mobile__dropdown--btn:hover {
+        background-color:#454a51;
+    }
+    .nav-mobile__dropdown--active:hover {
+        -ms-transform:rotate(180deg); /* IE 9 */
+        -webkit-transform:rotate(180deg); /* Safari and Chrome */
+        transform:rotate(180deg);
+        background-color:#00b9ff;
+    }
+    .nav-search--btn:hover {
+        opacity:0.8;
+    }
+    .nav-prime__item--link:hover {
+        text-decoration: none; color:#454a51;
+    }
+
+/*  ==========================================================================
+    hero__group styles
+    ========================================================================== */
+    .hero-controls__prev:hover, .hero-controls__next:hover {
+        background-color:rgb(0,0,0); background-color:rgba(0,0,0,0.8);
+    }
+    .hero-slides__play:hover {
+        opacity:1;
+    }
+    .hero-thumbs-paginator__prev:hover, .hero-thumbs-paginator__next:hover {
+        opacity:1;
+    }
+
+/*  ==========================================================================
+    content-slice__group styles
+    ========================================================================== */
+    @media only screen and (max-width: 480px), (min-width:760px) {
+        .med-tile__group:hover .med-tile__overlay {
+            top:0;
+        }
+        .med-tile__group:hover .med-tile__copy-box {
+            margin-top:-26.25%;
+        }
+        .med-tile__group:hover .med-tile__series {
+            display:block;
+        }
+        .med-tile__group:hover .med-tile__preview {
+            width:72%; margin-top:-6%;
+        }
+        .med-tile__group:hover .med-tile__presenter-profile {
+            top:0;
+        }
+    }
+
+/*  ==========================================================================
+    more-videos component - experience page styles
+    ========================================================================== */
+    .more-videos__link:hover {
+        border-color:white; text-decoration: none; color:#fff;
+    }
+    .more-videos__link:hover .more-videos__sub {
+        bottom:84%;
+    }
+    .more-videos__link:hover .more-videos__title {
+        top:82%; 
+    }
+    .social__action:hover {
+        background:#00b9ff; text-decoration: none; color:#fff;
+    }
+    .social__action--faves:hover {
+        background:#b32626;
+    }
+    .social__action--likes:hover {
+        background:#3B5998;
+    }
+    .social__action--tweets:hover {
+        background:#00BEF6;
+    }
+
+/*  ==========================================================================
+    c6-bar styles
+    ========================================================================== */
+    .c6b-logo__link:hover {
+        background:#313437;
+    }
+    .c6-bar__app-title:hover {
+        opacity:1.0;
+    }
+    .c6-bar__settings:hover {
+        background:#313437;
+    }
+    .c6-bar__settings:hover .c6-settings__gear-icon {
+        opacity:0.8;
+    }
+    .c6-bar__settings:hover .c6-settings__dropdown-icon {
+        opacity:0.8;
+    }
+    .c6-settings__dropdown-btn:hover {
+        color:#fff; text-decoration:none;
+        background:#313437;
+    }

@@ -1,10 +1,98 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="c6.sandbox" ng-controller="AppController">
     <head>
         <title>Cinema6 Site Sandbox</title>
+
+        <link rel="stylesheet" href="./assets/lib/c6ui/style/css/csswizardry-grid.css">
+        <link rel="stylesheet" href="./assets/lib/c6ui/style/css/c6__main.css">
+        <link rel="stylesheet" href="./assets/styles/Sandbox.css">
     </head>
     <body>
+        <c6-panels show="ExperienceCtrl.panels.show" duration="ExperienceCtrl.panels.duration"></c6-panels>
+        <div class="c6-bar__container c6-bar__container--offscreen"
+            ng-mouseenter="ExperienceCtrl.c6BarInUse = true"
+            ng-mouseleave="ExperienceCtrl.c6BarInUse = false"
+            ng-class="{'c6-bar__container--offscreen': !ExperienceCtrl.showC6Bar()}">
+            <c6-bar experience-name="{{ExperienceCtrl.content.name}}"
+                logo-url="{{ExperienceCtrl.content.img.logo && assets(ExperienceCtrl.content.img.logo)}}"
+                close="ExperienceCtrl.gotoStart">
+            </c6-bar>
+        </div>
 
+        <header class="masthead__group">
+            <nav class="container">
+                <ul class="nav-mobile clearfix tk--hdr">
+                    <li class="nav-mobile__cinema6">
+                        <a ui-sref="{{homeSref}}" title="Cinema6" class="nav-mobile__cinema6--link"><img src="assets/img/c6-brand--horizontal@2x.png" width="100%" alt="Cinema6"><span class="ir">Cinema6</span></a>
+                    </li>
+                    <li class="nav-mobile__dropdown">
+                        <button ng-click="toggleSlide()" class="nav-mobile__dropdown--btn" ng-class="{'nav-mobile__dropdown--active': slideOpen}" type="button"><span class="ir">Dropdown</span></button>
+                    </li>
+                </ul>
+                <ul class="nav-prime clearfix tk--hdr">
+                    <li class="nav-prime__cinema6"><a ui-sref="{{homeSref}}" title="Cinema6" class="nav-prime__cinema6--link"><img src="assets/img/c6-brand--horizontal@2x.png" width="100%" alt="Cinema6"><span class="ir">Cinema6</span></a></li>
+                    <li class="np_main-links__group clearfix">
+                        <ul class="np_main-links">
+                            <li ng-repeat="link in nav" class="nav-prime__item">
+                                <a ui-sref="{{link.sref}}" title="{{link.name}}" class="nav-prime__item--link">{{link.name}}</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-prime__search">
+                        <form class="nav-search__group clearfix">
+                            <input class="nav-search__text-box" type="search" name="search" value="Search Cinema6">
+                            <button type="submit" class="nav-search--btn"><span class="ir">Search</span></button>
+                        </form>
+                    </li>
+                </ul><!--.nav-prime-->
+            </nav><!--.nav-prime__group-->
+        </header><!--.masthead__group-->
+
+        <section class="landing-hero__group">
+            <c6-experience content="AppCtrl.experience"></c6-experience>
+        </section><!--.hero__group-->
+
+        <div ng-if="!AppCtrl.activeExperience" class="container">
+            <div class="grid">
+                <section class="video-info__group grid__item one-quarter lap--one-whole palm--one-whole">
+                    <h1 class="landing-section__hdr tk--hdr">About the Video</h1>
+                    <section class="social__group clearfix">
+                        <!--<a href="#" class="social__action social__action--faves" title="1,234 Faves">1,234&nbsp;Faves</a>-->
+                        <a href="#" class="social__action social__action--likes" title="9,551 Likes">9,551&nbsp;Likes</a>
+                        <a href="#" class="social__action social__action--tweets" title="2,300 Tweets">2,300&nbsp;Tweets</a>
+                    </section>
+                    <section class="vid-details">
+                        <p><strong>Published On:</strong> February 12, 2013</p>
+                        <p c6-context="ExperienceCtrl.content.org[0] as org"><strong>Published By:</strong> <a href="#">You!</a></p>
+                        <p><strong>Type:</strong> Whatever You Like</p>
+                    </section>
+                </section><!--
+
+                --><section class="grid__item one-half lap--one-whole palm--one-whole">
+                    <h1 class="landing-section__hdr tk--hdr">The Story</h1>
+                    <div class="landing-section__copy--secondary">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed egestas in massa vel molestie. Ut commodo elementum eros ac iaculis. Vivamus bibendum urna vel nulla mollis mollis. In vel lorem vel velit tempor cursus non vel ipsum. Suspendisse ultrices fringilla massa vel commodo.</p>
+
+                        <p>Pellentesque molestie ipsum quis enim placerat, nec posuere mauris pharetra. Morbi vitae neque magna. Pellentesque et felis bibendum, suscipit sem vitae, volutpat magna. Mauris porta velit nec blandit sodales. Ut adipiscing felis at mi porttitor bibendum. Donec rhoncus, lectus at convallis commodo, nulla lacus rutrum magna, quis porttitor dolor sem sed eros. Quisque eget blandit lacus.</p>
+
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing.</p>
+                    </div>
+                </section><!--
+
+                --><section class="grid__item one-quarter lap--one-whole palm--one-whole">
+                    <h1 class="landing-section__hdr tk--hdr">Your Stats</h1>
+                    <div class="vid-details">
+                        <p><strong>Last Played:</strong> 3 days ago</p>
+                        <p><strong>High Score:</strong> 102,931pts </p>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <script src="./assets/lib/angular/angular.min.js"></script>
+        <script src="./assets/lib/c6ui/c6ui.js"></script>
+        <script src="./assets/lib/c6ui/events/emitter.js"></script>
+        <script src="./assets/lib/c6ui/postmessage/postmessage.js"></script>
         <script src="./assets/scripts/app.js"></script>
         <!-- C6_SANDBOX_CONFIG -->
     </body>

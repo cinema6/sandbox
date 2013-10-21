@@ -1,0 +1,4 @@
+<div class="controls__scene" ng-style="{left: model().position + '%', 'margin-left': leftMargin() + 'px'}">
+	<button class="controls__scene-btn" ng-click="handlers().click($event, model())"><span class="ir">{{model().text}}</span></button>
+	<p class="controls__caption-{{model().__c6ControlsNode.top ? 'top' : 'bottom'}}">{{model().text}}</p>
+</div>
