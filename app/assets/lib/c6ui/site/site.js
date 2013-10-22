@@ -131,6 +131,10 @@
                 return deferred.promise;
             };
 
+            this.getSiteUrl = function() {
+                return _private.session.request('currentUrl');
+            };
+
             this.requestBar = function(show) {
                 _private.session.ping('requestBar', show);
             };

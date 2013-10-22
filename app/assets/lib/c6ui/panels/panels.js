@@ -79,7 +79,7 @@
                 var timeline = new TimelineLite({paused:true}),
                     duration = aniCache.data('c6Panels').duration;
                 element.css({ bottom : '100%', display : 'block', 'z-index' : 99999 });
-                timeline.to( element.get(0), duration, { bottom: '50%', ease:Power2.easeInOut} );
+                timeline.to( element[0], duration, { bottom: '50%', ease:Power2.easeInOut} );
                 return timeline;
             },
             start: function(element, done, timeline) {
@@ -100,7 +100,7 @@
                 var timeline = new TimelineLite({paused:true}),
                     duration = aniCache.data('c6Panels').duration;
                 element.css({ bottom : '50%', display : 'block', 'z-index' : 99999 });
-                timeline.to( element.get(0), duration, { bottom: '100%', ease:Power2.easeInOut} );
+                timeline.to( element[0], duration, { bottom: '100%', ease:Power2.easeInOut} );
                 return timeline;
             },
             start: function(element, done, timeline) {
@@ -121,7 +121,7 @@
                 var timeline = new TimelineLite({paused:true}),
                     duration = aniCache.data('c6Panels').duration;
                 element.css({ top : '100%', display : 'block', 'z-index' : 99999 });
-                timeline.to( element.get(0), duration, { top: '50%', ease:Power2.easeInOut} );
+                timeline.to( element[0], duration, { top: '50%', ease:Power2.easeInOut} );
                 return timeline;
             },
             start: function(element, done, timeline) {
@@ -142,7 +142,7 @@
                 var timeline = new TimelineLite({paused:true}),
                     duration = aniCache.data('c6Panels').duration;
                 element.css({ top : '50%', display : 'block', 'z-index' : 99999 });
-                timeline.to( element.get(0), duration, { top: '100%', ease:Power2.easeInOut} );
+                timeline.to( element[0], duration, { top: '100%', ease:Power2.easeInOut} );
                 return timeline;
             },
             start: function(element, done, timeline) {

@@ -3,21 +3,13 @@
 
 
     angular.module('c6.sandbox', ['c6.ui'])
-        .controller('AppController', ['$scope', 'SandboxConfig', 'C6ExperienceService', 'c6AniCache', 'c6Computed', '$window',
-                            function(  $scope,   SandboxConfig,   C6ExperienceService,   c6AniCache,   c,            $window) {
+        .controller('AppController', ['$scope', 'C6Sandbox', 'C6ExperienceService', 'c6AniCache', 'c6Computed', '$window', '$location',
+                            function(  $scope,   C6Sandbox,   C6ExperienceService,   c6AniCache,   c,            $window,   $location) {
             var self = this;
-
-            function getExperience(config) {
-                var experience = (config.experiences && config.experiences[0]) || {};
-
-                experience.id = 'sandbox';
-
-                return experience;
-            }
 
             this.activeExperience = false;
 
-            this.experience = getExperience(SandboxConfig);
+            this.experience = C6Sandbox.getCurrentExperience();
 
             this.panels = {
                 show: false,
@@ -39,14 +31,24 @@
             }, ['AppCtrl.c6BarInUse', 'AppCtrl.experienceWantsBar', 'AppCtrl.activeExperience']);
 
             this.gotoStart = function() {
-                C6ExperienceService.getSession('sandbox').then(function(session) {
+                C6ExperienceService.getSession(self.experience.id).then(function(session) {
                     session.gotoState('start');
                 });
             };
 
-            C6ExperienceService.getSession('sandbox').then(function(session) {
+            C6ExperienceService.getSession(self.experience.id).then(function(session) {
                 session.on('currentUrl', function(data, respond) {
-                    respond('http://www.cinema6.com/#/experiences/sandbox');
+                    respond(C6Sandbox.getSiteUrl());
+                });
+
+                session.on('pendingPathComplete', function(done) {
+                    if (done) {
+                        self.activeExperience = true;
+                    }
+                });
+
+                session.on('pathChange', function(path) {
+                    $location.path(path).replace();
                 });
 
                 session.on('transitionState', function(wantState, respond) {
@@ -78,37 +80,64 @@
                 });
             });
 
+            if ($location.path()) {
+                C6ExperienceService.pendingPath(C6Sandbox.getCurrentExperience().id, $location.path());
+            }
+
             $scope.AppCtrl = this;
         }])
 
-        .factory('SandboxConfig', ['$document', '$window', function($document, $window) {
+        .service('C6Sandbox', ['$document', '$window', function($document, $window) {
             var config = $document[0].getElementById('c6_config').innerHTML,
-                configObject = JSON.parse(config);
+                configObject = JSON.parse(config),
+                settings = JSON.parse($window.localStorage.getItem('__c6_sandbox__'));
 
-            function C6Sandbox() {
-                var settings = JSON.parse($window.localStorage.getItem('__c6_sandbox__'));
-
-                function writeSettings() {
-                    $window.localStorage.setItem('__c6_sandbox__', JSON.stringify(settings));
-                }
-
-                if (!settings) {
-                    settings = {
-                        experienceIndex: 0
-                    };
-
-                    writeSettings();
-                }
-
-                this.getExperiences = function() {
-                    return configObject.experiences;
-                };
+            function writeSettings() {
+                $window.localStorage.setItem('__c6_sandbox__', JSON.stringify(settings));
             }
 
-            window.c6Sandbox = new C6Sandbox();
+            if (!settings) {
+                settings = {
+                    experienceIndex: 0,
+                    siteUrl: 'http://www.cinema6.com/experiences/' + (configObject.experiences[0].uri || 'nouri')
+                };
 
+                writeSettings();
+            }
 
-            return configObject;
+            this.getExperiences = function() {
+                return configObject.experiences;
+            };
+
+            this.getCurrentExperience = function() {
+                return configObject.experiences[settings.experienceIndex];
+            };
+
+            this.setCurrentExperience = function(index) {
+                settings.experienceIndex = index;
+                writeSettings();
+                $window.location.reload();
+
+                return configObject.experiences[index];
+            };
+
+            this.clear = function() {
+                settings = null;
+                writeSettings();
+                $window.location.reload();
+            };
+
+            this.setSiteUrl = function(url) {
+                settings.siteUrl = url;
+                writeSettings();
+                return settings.siteUrl;
+            };
+
+            this.getSiteUrl = function() {
+                return settings.siteUrl;
+            };
+
+            $window.c6Sandbox = this;
         }])
 
         .directive('c6Experience', ['C6ExperienceService', function(C6ExperienceService) {
