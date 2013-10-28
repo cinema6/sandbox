@@ -3,8 +3,8 @@
 
 
     angular.module('c6.sandbox', ['c6.ui'])
-        .controller('AppController', ['$scope', 'C6Sandbox', 'C6ExperienceService', 'c6AniCache', 'c6Computed', '$window', '$location',
-                            function(  $scope,   C6Sandbox,   C6ExperienceService,   c6AniCache,   c,            $window,   $location) {
+        .controller('AppController', ['$scope', 'C6Sandbox', 'C6ExperienceService', 'c6AniCache', 'c6Computed', '$window', '$location', '$log',
+                            function(  $scope ,  C6Sandbox ,  C6ExperienceService ,  c6AniCache ,  c          ,  $window ,  $location ,  $log) {
             var self = this;
 
             this.activeExperience = false;
@@ -73,6 +73,20 @@
                         unregister();
                         respond();
                     });
+                });
+
+                session.on('shareUrl', function(data) {
+                    $log.log('C6SANDBOX: (shareUrl) SUCCESS! Got share request with data: ', data);
+                });
+
+                session.on('openExternalLink', function(config) {
+                    var win = $window.open(config.url, config.target);
+
+                    if (!win) {
+                        if ($window.confirm('You are about to leave Cinema6. Continue?')) {
+                            $window.open(config.url, config.target);
+                        }
+                    }
                 });
 
                 session.on('requestBar', function(showBar) {
