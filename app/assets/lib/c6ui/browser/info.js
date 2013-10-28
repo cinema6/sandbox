@@ -42,16 +42,27 @@
 
                         profile.canvasVideo = (function() {
                             var macOSXVersion = (function() {
-                                var version = (c6UserAgent.os.name === 'mac' &&
-                                                (c6UserAgent.os.version) &&
-                                                (c6UserAgent.os.version.match(/(\d+\.\d+)/)));
+                                    var version = (c6UserAgent.os.name === 'mac' &&
+                                                    (c6UserAgent.os.version) &&
+                                                    (c6UserAgent.os.version.match(/(\d+\.\d+)/)));
+                                    return (version || null) && version[0] && version[0].split('.');
+                                })(),
+                                badVersion = true;
 
-                                return (version || null) && parseFloat(version);
-                            })();
+                            if (macOSXVersion){
+                                macOSXVersion[0] = parseInt(macOSXVersion[0],10);
+                                macOSXVersion[1] = parseInt(macOSXVersion[1],10);
+                                if (macOSXVersion[0] < 10) {
+                                    badVersion = false;
+                                } else
+                                if ((macOSXVersion[0] === 10) && (macOSXVersion[1] < 7)){
+                                    badVersion = false;
+                                }
+                            }
 
                             return !(c6UserAgent.device.isIOS() ||
                                     c6UserAgent.app.name === 'silk' ||
-                                    c6UserAgent.app.name === 'safari' && (macOSXVersion >= 10.7 && macOSXVersion <= 10.8));
+                                    c6UserAgent.app.name === 'safari' && badVersion);
                         })();
 
                         profile.touch = Modernizr && Modernizr.touch;
