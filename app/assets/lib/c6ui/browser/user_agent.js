@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('c6.ui')
-    .service('c6BrowserInfo',['$window',function($window){
+    .service('c6UserAgent',['$window',function($window){
         var ua = $window.navigator.userAgent, match;
 
         this.app = {
@@ -26,44 +26,10 @@
             isKindle    : function() { return (this.name === 'kindle'); },
             isAndroid   : function() { return ( this.isKindle() || (this.name === 'android') ); },
 
-            isMobile    : function() { return (this.isIOS() || this.isAndroid()); },
-
+            isMobile    : function() { return (this.isIOS() || this.isAndroid()); }
         };
 
         this.userAgent  = null;
-
-        this.inlineVideoAllowed = function() {
-            if (this.app.name === null){
-                return null;
-            }
-            return (this.device.isIPhone() || this.device.isIPod()  || this.app.name === 'silk') ? false : true;
-        };
-
-        this.multiPlayersAllowed = function(){
-            if (this.app.name === null){
-                return null;
-            }
-            return (this.device.isIOS() || this.app.name === 'silk') ? false : true;
-        };
-
-        this.videoOnCanvasAllowed = function(){
-            var macOSX;
-            if (this.app.name === null){
-                return null;
-            }
-
-            if ((this.os.name === 'mac') && (this.os.version !== null) ){
-                var m = this.os.version.match(/(\d+\.\d+)/);
-                if (m !== null){
-                    macOSX = parseFloat(m[1]);
-                }
-            }
-
-            return ( this.device.isIOS()        ||
-                     (this.app.name === 'silk') ||
-                     (this.app.name === 'safari' && macOSX >= 10.6)
-                    ) ? false : true;
-        };
 
         if (!ua){
             return;

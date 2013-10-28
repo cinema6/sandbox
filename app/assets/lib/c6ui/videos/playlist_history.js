@@ -72,7 +72,7 @@
                     set('playing', false);
                 }
             };
-            this.push = function(nodeId) {
+            this.push = function(nodeId ) {
                 var index = this.index,
                     historyLength = history.size(),
                     isMostRecent = (index === historyLength - 1),
@@ -109,11 +109,26 @@
                 set('currentNode.id', data.id);
                 set('currentNode.name', data.name);
             };
-            this.init = function(playlist) {
+            this.init = function(playlist,startNode,startTime) {
+                var data;
                 playListCtrl = playlist;
 
-                playlist.start();
-                this.push(playlist.currentNodeId());
+                if (startNode === undefined){
+                    playlist.start();
+                } else {
+                    playlist.load(startNode,startTime,true);
+                }
+
+                data = playlist.getDataForNode(playlist.currentNodeId());
+                if (!data){
+                    $log.error('Invalid startNode');
+                    return;
+                }
+
+                set('currentNode.id', data.id);
+                set('currentNode.name', data.name);
+                recordToHistory(data.id, data);
+                set('index', history.index());
 
                 if (!this.ready) {
                     // We're going to re-emit some events from the playListCtrl
@@ -127,7 +142,7 @@
                     set('ready', true);
                 }
             };
-            this.reset = function(playlist) {
+            this.reset = function(playlist,startNode,startTime) {
                 // Stop!
                 this.stop();
                 // Reset the index
@@ -135,7 +150,7 @@
                 // Erase the history
                 history.clear();
                 // Re-initialize
-                this.init(playlist || playListCtrl);
+                this.init(playlist || playListCtrl,startNode,startTime);
             };
             this.getHistory = function() {
                 return history.createSubscriber();

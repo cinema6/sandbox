@@ -2,8 +2,7 @@
     'use strict';
 
     angular.module('c6.ui')
-        .directive('c6Playlist', ['$timeout', '$log',
-            function($timeout, $log){
+        .directive('c6Playlist', ['$timeout', '$log', function($timeout, $log){
             function linker(scope,element,attrs,ctlr){
                 var showPlayer = function(videoToShow) {
                     angular.forEach(scope.videos, function(video) {
@@ -12,6 +11,10 @@
                 },
                 myBuffers = scope.buffers,
                 myUrl     = scope.url,
+                setReady = function(){
+                    scope.model.ready = true;
+                    scope.$emit('c6PlayListReady',ctlr);
+                },
                 activatePlayerTimeout;
 
                 $log.info('c6PlayList is linked, scope.id=' + scope.$id +
@@ -23,9 +26,9 @@
                     throw new SyntaxError('c6PlayList requires an id attribute');
                 }
 
-                if (!myUrl) {
-                    throw new SyntaxError('c6PlayList requires an x-url attribute');
-                }
+//                if (!myUrl) {
+//                    throw new SyntaxError('c6PlayList requires an x-url attribute');
+//                }
 
                 if (!myBuffers) {
                     $log.warn('No x-buffers attribute found, default to 1');
@@ -45,23 +48,27 @@
                     scope.playerBuffers.push('buffer' + i.toString());
                 }
 
-                scope.loadPlayList(
-                    {
-                        id                   : attrs.id,
-                        rqsUrl               : myUrl,
-                        videoSrcUrlFormatter : scope.urlFormatter
-                    },
-                    function(err){
-                        if (err){
-                            $log.error('loadPlayList Failed: ' + err.message);
-                            return;
+                if (myUrl){
+                    scope.loadPlayList(
+                        {
+                            id                   : attrs.id,
+                            rqsUrl               : myUrl,
+                            videoSrcUrlFormatter : scope.urlFormatter
+                        })
+                    .then(function(){
+                            $log.info('loadPlayList succeeded.');
+                            if (scope.model.clients.length === myBuffers){
+                                setReady();
+                            }
+                        },
+                        function(err){
+                            if (err){
+                                $log.error('loadPlayList Failed: ' + err.message);
+                                return;
+                            }
                         }
-
-                        if (scope.model.clients.length === myBuffers){
-                            scope.setReady();
-                        }
-                    }
-                );
+                    );
+                }
 
                 scope.$on('c6video-ready',function(evt,video){
                     $log.info('New video: ' + video.id);
@@ -95,8 +102,8 @@
                     });
 
                     if (scope.model.clients.length === myBuffers){
-                        if (scope.model.rootNode !== null){
-                            scope.setReady();
+                        if ((!myUrl) || (scope.model.rootNode !== null)){
+                            setReady();
                         }
                     }
                 });
@@ -244,8 +251,9 @@
             };
         }])
 
-        .controller('C6PlaylistController',['$scope','$log','$http','c6EventEmitter',
-                                            function($scope,$log,$http,c6EventEmitter){
+        .controller('C6PlaylistController',['$scope','$log','$http','$q',
+            'c6EventEmitter',
+            function($scope,$log,$http,$q,c6EventEmitter){
             $log.log('Create c6PlayListCtlr: scope.id=' + $scope.$id);
 
             // Turn me into an emitter
@@ -267,26 +275,27 @@
 
             /*****************************************************
              *
-             * Scope Decoration
+             * Public Interface
              *
-             * Data and methods for the PlayList Directive
-             * which creates a private scope when instantiating
-             * the PlayList Controller.
              */
 
-            $scope.model = model;
-
-            $scope.setReady = function(){
-                model.ready = true;
-                $scope.$emit('c6PlayListReady',self);
-            };
-
-            $scope.loadPlayList = function(params, callback){
+            this.loadPlayList = function(params ){
                 var id      = params.id,
                     rqsUrl  = params.rqsUrl,
                     urlFunc = params.videoSrcUrlFormatter,
-                    req;
+                    req,
+                    deferred = $q.defer();
+
                 $log.log('Loading playlist: ' + id);
+                self.emit('beginListLoad',null,id,rqsUrl);
+                model.rootNode         = null;
+                model.playListData     = null;
+                model.playListDict     = null;
+                model.currentNode      = null;
+                model.currentClient    = null;
+                model.clients.forEach(function(client){
+                    self._setClientWithNode(client,null);
+                });
                 model.id = id;
                 req = $http({method: 'GET', url: (rqsUrl)});
 
@@ -299,65 +308,20 @@
                     } else{
                         self._compilePlayList( data, model, urlFunc );
                     }
-                    callback(null);
-                    return;
+                    deferred.resolve(id);
                 });
 
                 req.error(function(data,status/*,headers,config*/){
                     $log.error('PlayList request fails: ' + status);
-                    callback( {
+                    var err = {
                         message : 'Failed with: ' + status,
                         statusCode : status
-                    });
+                    };
+                    deferred.reject(err);
                 });
+
+                return deferred.promise;
             };
-
-
-            $scope.addNodeClient = function(clientId){
-                var result = {
-                    id  : clientId,
-                    active : false,
-                    startTime : 0,
-                    node : {},
-                    data : {},
-
-                    clear : function(){
-                        this.active = false;
-                        this.startTime = 0;
-                        this.node = {};
-                        this.data = {};
-                    },
-
-                    isTerminal : function() {
-                        if ((this.node.branches) && (this.node.branches.length > 0)){
-                            return false;
-                        }
-                        return true;
-                    },
-
-                    toString : function(){
-                        return 'NC [' + this.id + '][' +
-                            ((this.node.name === undefined) ? 'null' : this.node.name) + ']';
-                    }
-                };
-                $log.info('Add client: ' + result);
-                model.clients.push(result);
-
-                model.cli[clientId] = result;
-
-                return result;
-            };
-
-            /*
-             * Scope Decoration  -- End
-             *****************************************************/
-
-
-            /*****************************************************
-             *
-             * Public interace
-             *
-             */
 
             this.id            = function() { return model.id;            };
 
@@ -370,6 +334,10 @@
 
             this.currentNodeId = function() {
                 return model.currentNode && model.currentNode.id;
+            };
+
+            this.rootNodeId = function(){
+                return model.rootNode && model.rootNode.id;
             };
 
             this.getCurrentBranches= function(){
@@ -410,6 +378,7 @@
 
                 record.id       = node.id;
                 record.name     = node.name;
+                record.branches = node.branches;
 
                 return record;
             };
@@ -553,6 +522,65 @@
              * Public Interface -- End
              *****************************************************/
 
+            /*****************************************************
+             *
+             * Scope Decoration
+             *
+             * Data and methods for the PlayList Directive
+             * which creates a private scope when instantiating
+             * the PlayList Controller.
+             */
+
+            $scope.model = model;
+
+            $scope.loadPlayList = this.loadPlayList;
+
+            $scope.addNodeClient = function(clientId){
+                var result = {
+                    id  : clientId,
+                    active : false,
+                    startTime : 0,
+                    node : {},
+                    data : {},
+
+                    clear : function(){
+                        this.active = false;
+                        this.startTime = 0;
+                        this.node = {};
+                        this.data = {};
+                    },
+
+                    isTerminal : function() {
+                        if ((this.node.branches) && (this.node.branches.length > 0)){
+                            return false;
+                        }
+                        return true;
+                    },
+
+                    toString : function(){
+                        return 'NC [' + this.id + '][' +
+                            ((this.node.name === undefined) ? 'null' : this.node.name) + ']';
+                    }
+                };
+                $log.info('Add client: ' + result);
+                model.clients.push(result);
+
+                model.cli[clientId] = result;
+
+                return result;
+            };
+
+            /*
+             * Scope Decoration  -- End
+             *****************************************************/
+
+
+            /*****************************************************
+             *
+             * Private Methods
+             *
+             */
+
             this._mapNodesToClients = function(){
                 var self         = this,
                     clients      = [],
@@ -660,7 +688,12 @@
 
                 for (i = 0; i < nodesLength; i++){
                     copy = angular.copy(playList.nodes[i]);
-                    if (copy.parents.length === 0){
+                    if ((copy.parents.length === 0) || (copy.root === true)){
+                        if ((output.rootNode && (output.rootNode.root === true)) &&
+                                (copy.root === true)){
+                            throw new Error('Nodes [' + output.rootNode.id + ',' + copy.id +
+                                    '] cannot both be rootNodes!');
+                        }
                         output.rootNode = copy;
                     }
 
@@ -672,6 +705,10 @@
                     output.playListDict[copy.id] = copy;
                     delete copy.children;
                     delete copy.parents;
+                }
+
+                if (output.rootNode === undefined){
+                    throw new Error('Unable to locate rootNode in playList');
                 }
 
                 return output;
@@ -756,6 +793,11 @@
 
                 return output;
             };
+
+            /*
+             * Private Methods  -- End
+             *****************************************************/
+
 
         }]);
 })();

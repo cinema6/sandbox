@@ -185,7 +185,8 @@
             };
         }])
 
-        .service('C6ExperienceService', ['$q', 'postMessage', function($q, postMessage) {
+        .service('C6ExperienceService', ['$q', 'postMessage', 'c6BrowserInfo',
+                                function( $q ,  postMessage ,  c6BrowserInfo) {
             var self = this,
                 _private = {
                     sessions: {},
@@ -264,7 +265,8 @@
                     respond({
                         success: true,
                         appData: {
-                            experience: experience
+                            experience: experience,
+                            profile: c6BrowserInfo.profile
                         }
                     });
                 });
