@@ -1,9 +1,0 @@
-[submodule "vendor/angular"]
-	path = vendor/angular
-	url = git@github.com:cinema6/angular.js.git
-[submodule "vendor/c6ui"]
-	path = vendor/c6ui
-	url = git@github.com:cinema6/c6ui.git
-[submodule "vendor/gsap"]
-	path = vendor/gsap
-	url = git@github.com:cinema6/GreenSock-JS.git
