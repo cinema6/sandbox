@@ -164,7 +164,7 @@
                 },
                 template:   '<iframe class="experience-frame"' +
                                 'ng-class="{\'experience-frame--active\': active}"' +
-                                'scrolling="no" ng-src="{{content.appUrl}}"' +
+                                'scrolling="no" ng-src="{{url}}"' +
                                 'sandbox="allow-scripts allow-same-origin">' +
                             '</iframe>',
                 link: function(scope, element) {
@@ -172,6 +172,21 @@
 
                     scope.$watch('content', function(experience, oldExperience) {
                         if (experience) {
+                            scope.url = (function() {
+                                var prefix = experience.appUriPrefix,
+                                    postfix = (function() {
+                                        var uriArray = experience.appUri.split('/');
+
+                                        uriArray.shift();
+
+                                        return uriArray.join('/');
+                                    })();
+
+                                return prefix + postfix;
+                            })();
+
+                            console.log(scope.url);
+
                             C6ExperienceService._registerExperience(experience, iframeWindow);
                         }
                     });
