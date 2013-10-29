@@ -7,7 +7,9 @@
             var _private = {
                 ping: function(win, event, type, data) {
                     $timeout(function() {
-                        win.postMessage({ __c6__: { event: event, type: type, data: data } }, '*');
+                        var message = { __c6__: { event: event, type: type, data: data } };
+
+                        win.postMessage(JSON.stringify(message), '*');
                     });
                 },
                 sessionCount: 0,
@@ -25,7 +27,8 @@
                     return foundSession;
                 },
                 handleMessage: function(event) {
-                    var c6 = event.data && event.data.__c6__,
+                    var eventData = event.data,
+                        c6,
                         eventName,
                         type,
                         typeName,
@@ -33,6 +36,12 @@
                         data,
                         session,
                         done;
+
+                    try {
+                        c6 = JSON.parse(eventData).__c6__;
+                    } catch (err) {
+                        c6 = undefined;
+                    }
 
                     if (!c6) { return; }
 
