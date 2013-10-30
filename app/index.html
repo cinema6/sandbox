@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="./assets/lib/c6ui/style/css/csswizardry-grid.css">
         <link rel="stylesheet" href="./assets/lib/c6ui/style/css/c6__main.css">
         <link rel="stylesheet" href="./assets/styles/Sandbox.css">
+        <link rel="stylesheet" ng-href="{{AppCtrl.stylesheet}}">
     </head>
     <body ng-class="{'no-scroll': AppCtrl.activeExperience}">
         <c6-panels show="AppCtrl.panels.show" duration="AppCtrl.panels.duration"></c6-panels>
@@ -55,31 +56,59 @@
                     </section>
                     <section class="vid-details">
                         <p><strong>Published On:</strong> February 12, 2013</p>
-                        <p c6-context="ExperienceCtrl.content.org[0] as org"><strong>Published By:</strong> <a href="#">You!</a></p>
+                        <p><strong>Published By:</strong> <a href="#">You!</a></p>
                         <p><strong>Type:</strong> Whatever You Like</p>
                     </section>
                 </section><!--
 
-                --><section class="grid__item one-half lap--one-whole palm--one-whole">
-                    <h1 class="landing-section__hdr tk--hdr">The Story</h1>
-                    <div class="landing-section__copy--secondary">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed egestas in massa vel molestie. Ut commodo elementum eros ac iaculis. Vivamus bibendum urna vel nulla mollis mollis. In vel lorem vel velit tempor cursus non vel ipsum. Suspendisse ultrices fringilla massa vel commodo.</p>
-
-                        <p>Pellentesque molestie ipsum quis enim placerat, nec posuere mauris pharetra. Morbi vitae neque magna. Pellentesque et felis bibendum, suscipit sem vitae, volutpat magna. Mauris porta velit nec blandit sodales. Ut adipiscing felis at mi porttitor bibendum. Donec rhoncus, lectus at convallis commodo, nulla lacus rutrum magna, quis porttitor dolor sem sed eros. Quisque eget blandit lacus.</p>
-
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing.</p>
-                    </div>
+                --><section ng-include="AppCtrl.html.middle"
+                        class="grid__item one-half lap--one-whole palm--one-whole">
                 </section><!--
 
-                --><section class="grid__item one-quarter lap--one-whole palm--one-whole">
-                    <h1 class="landing-section__hdr tk--hdr">Your Stats</h1>
-                    <div class="vid-details">
-                        <p><strong>Last Played:</strong> 3 days ago</p>
-                        <p><strong>High Score:</strong> 102,931pts </p>
-                    </div>
+                --><section ng-include="AppCtrl.html.right"
+                        class="grid__item one-quarter lap--one-whole palm--one-whole">
                 </section>
             </div>
         </div>
+
+        <footer class="footer__group">
+            <div class="container">
+                <div class="grid">
+                    <nav class="grid__item one-sixth palm--one-half lap--one-third footer__has-divider">
+                        <h3 class="footer__hdr tk--hdr">Browse</h3>
+                    </nav>
+                    <nav class="grid__item one-sixth palm--one-half lap--one-third footer__has-divider">
+                        <h3 class="footer__hdr tk--hdr">Categories</h3>
+                    </nav>
+                    <aside class="grid__item one-sixth palm--one-half lap--one-third footer__has-divider">
+                        <h3 class="footer__hdr tk--hdr">Community</h3>
+                    </aside>
+                    <aside class="grid__item one-sixth palm--one-half lap--one-half footer__has-divider">
+                        <h3 class="footer__hdr tk--hdr">Contact</h3>
+                        <p class="footer__contact">
+                            252 Nassau Street <br>
+                            2nd Floor <br>
+                            Princeton, NJ 08542
+                        </p>
+                        <p><a href="#" class="footer-links--link">info@cinema6.com</a></p>
+                    </aside>
+                    <div class="grid__item two-sixths palm--one-whole lap--one-half">
+                        <h3 class="footer__brand">
+                            <a ui-sref="home" class="footer__brand--link" title="Cinema6 - Where Video Goes to Play">
+                                <span class="c6-brand--vertical"><img class="c6-brand--vertical-img" src="assets/img/c6-brand--vertical@2x.png" width="100%"></span>
+                                <strong class="footer-brand__tagline tk--hdr">Where Video Goes to Play</strong>
+                            </a>
+                        </h3>
+                    </div>
+                </div><!--.grid-->
+            </div><!--.container-->
+            <div class="fineprint__group">
+                &copy; Copyright 2013 Cinema6. All rights reserved. 
+                &nbsp;&nbsp;&nbsp;&nbsp; <a ui-sref="privacy" class="fineprint--link" title="Privacy Policy">Privacy Policy</a>
+                &nbsp;&nbsp;&bullet;&nbsp;&nbsp; <a ui-sref="terms" class="fineprint--link" title="Terms of Use">Terms of Use</a>
+                &nbsp;&nbsp;&bullet;&nbsp;&nbsp; Made with care in Princeton, NJ
+            </div>
+        </footer>
 
         <script>
             window.__C6_APP_BASE_URL__ = 'assets';

@@ -24,6 +24,13 @@ module.exports = function(config) {
                 res.writeHead(200, { 'content-type': 'text/html', 'content-length': Buffer.byteLength(fileString) });
                 res.end(fileString);
             });
+        } else if (!!filepath.match(/\/_landing/)) {
+            send(req, url.parse(req.url.replace('/_landing', '')).pathname)
+                .root(process.cwd())
+                .pipe(res)
+                .on('error', function(err) {
+                    throw err;
+                });
         } else {
             send(req, url.parse(req.url).pathname)
                 .root(path.resolve(__dirname, 'app'))

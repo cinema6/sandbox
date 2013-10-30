@@ -5,11 +5,24 @@
     angular.module('c6.sandbox', ['c6.ui'])
         .controller('AppController', ['$scope', 'C6Sandbox', 'C6ExperienceService', 'c6AniCache', 'c6Computed', '$window', '$location', '$log',
                             function(  $scope ,  C6Sandbox ,  C6ExperienceService ,  c6AniCache ,  c          ,  $window ,  $location ,  $log) {
-            var self = this;
+            var self = this,
+                getLandingContent = function(section) {
+                    var landingPageContent = this.experience.landingPageContent,
+                        landingContentDir = (C6Sandbox.__config__.landingContentDir || 'landingContent') + '/';
+
+                    return landingPageContent && ('_landing/' + landingContentDir + landingPageContent[section]);
+                }.bind(this);
 
             this.activeExperience = false;
 
             this.experience = C6Sandbox.getCurrentExperience();
+
+            this.html = {
+                middle: getLandingContent('middle'),
+                right: getLandingContent('right')
+            };
+
+            this.stylesheet = getLandingContent('stylesheet');
 
             this.panels = {
                 show: false,
@@ -99,6 +112,11 @@
             }
 
             $scope.AppCtrl = this;
+            $scope.assetUrl = function(url) {
+                var landingContentDir = (C6Sandbox.__config__.landingContentDir || 'landingContent') + '/';
+
+                return '_landing/' + landingContentDir + url;
+            };
         }])
 
         .service('C6Sandbox', ['$document', '$window', function($document, $window) {
@@ -118,6 +136,8 @@
 
                 writeSettings();
             }
+
+            this.__config__ = configObject;
 
             this.getExperiences = function() {
                 return configObject.experiences;
