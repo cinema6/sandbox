@@ -184,8 +184,7 @@
                 },
                 template:   '<iframe class="experience-frame"' +
                                 'ng-class="{\'experience-frame--active\': active}"' +
-                                'scrolling="no" ng-src="{{url}}"' +
-                                'sandbox="allow-scripts allow-same-origin">' +
+                                'scrolling="no" ng-src="{{url}}">' +
                             '</iframe>',
                 link: function(scope, element) {
                     var iframeWindow = element.prop('contentWindow');
