@@ -8,7 +8,7 @@
             var self = this,
                 getLandingContent = function(section) {
                     var landingPageContent = this.experience.landingPageContent,
-                        landingContentDir = (C6Sandbox.__config__.landingContentDir || 'landingContent') + '/';
+                        landingContentDir = (C6Sandbox.__config__.landingContentDir || 'siteContent') + '/';
 
                     return landingPageContent && ('_landing/' + landingContentDir + landingPageContent[section]);
                 }.bind(this);
