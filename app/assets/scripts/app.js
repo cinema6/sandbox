@@ -113,7 +113,7 @@
 
             $scope.AppCtrl = this;
             $scope.assetUrl = function(url) {
-                var landingContentDir = (C6Sandbox.__config__.landingContentDir || 'landingContent') + '/';
+                var landingContentDir = (C6Sandbox.__config__.landingContentDir || 'siteContent') + '/';
 
                 return '_landing/' + landingContentDir + url;
             };
