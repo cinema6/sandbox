@@ -179,6 +179,8 @@
             this.setSpeed = function(speed) {
                 settings.speed = speed;
                 writeSettings();
+                $window.location.reload();
+
                 return settings.speed;
             };
 
