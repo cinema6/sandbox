@@ -110,3 +110,15 @@ This method returns the URL that the sandbox will respond with when your applica
 **returns**: String
 
 This method sets the URL that the sandbox will respond with when your application requests the site's URL.
+
+### getSpeed()
+**accepts**: *none*  
+**returns**: String
+
+This method returns the speed (connection) that the sandbox will give to your application through the profile. By default, it is "fast".
+
+## setSpeed(speed)
+**accepts**: *String* speed  
+**returns**: String
+
+This method sets the speed that will be sent in the device profile to your application.
