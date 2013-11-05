@@ -131,7 +131,8 @@
             if (!settings) {
                 settings = {
                     experienceIndex: 0,
-                    siteUrl: 'http://www.cinema6.com/experiences/' + (configObject.experiences[0].uri || 'nouri')
+                    siteUrl: 'http://www.cinema6.com/experiences/' + (configObject.experiences[0].uri || 'nouri'),
+                    speed: 'fast'
                 };
 
                 writeSettings();
@@ -171,10 +172,21 @@
                 return settings.siteUrl;
             };
 
+            this.getSpeed = function() {
+                return settings.speed;
+            };
+
+            this.setSpeed = function(speed) {
+                settings.speed = speed;
+                writeSettings();
+                return settings.speed;
+            };
+
             $window.c6Sandbox = this;
         }])
 
-        .directive('c6Experience', ['C6ExperienceService', function(C6ExperienceService) {
+        .directive('c6Experience', ['C6ExperienceService', 'C6Sandbox', 'c6BrowserInfo',
+        function                   ( C6ExperienceService ,  C6Sandbox ,  c6BrowserInfo ) {
             return {
                 restrict: 'E',
                 replace: true,
@@ -204,7 +216,7 @@
                                 return prefix + postfix;
                             })();
 
-                            console.log(scope.url);
+                            c6BrowserInfo.profile.speed = C6Sandbox.getSpeed();
 
                             C6ExperienceService._registerExperience(experience, iframeWindow);
                         }
