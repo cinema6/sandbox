@@ -196,9 +196,9 @@
                     content: '=',
                     active: '='
                 },
-                template:   '<iframe class="experience-frame"' +
-                                'ng-class="{\'experience-frame--active\': active}"' +
-                                'scrolling="no" ng-src="{{url}}">' +
+                template:  '<iframe class="c6-exp__frame"'+
+                            '   ng-class="{\'c6-exp__frame--fullscreen\': active}"'+
+                            '   scrolling="no" ng-src="{{url}}">'+
                             '</iframe>',
                 link: function(scope, element) {
                     var iframeWindow = element.prop('contentWindow');
