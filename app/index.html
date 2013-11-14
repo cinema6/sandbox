@@ -5,11 +5,10 @@
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="./assets/lib/c6ui/style/css/csswizardry-grid.css">
-        <link rel="stylesheet" href="./assets/lib/c6ui/style/css/c6__main.css">
         <link rel="stylesheet" href="./assets/styles/Sandbox.css">
         <link rel="stylesheet" ng-href="{{AppCtrl.stylesheet}}">
     </head>
-    <body ng-class="{'no-scroll': AppCtrl.activeExperience}">
+    <body>
         <c6-panels show="AppCtrl.panels.show" duration="AppCtrl.panels.duration"></c6-panels>
         <div class="c6-bar__container c6-bar__container--offscreen"
             ng-mouseenter="AppCtrl.c6BarInUse = true"
@@ -19,47 +18,54 @@
             </c6-bar>
         </div>
 
-        <header class="masthead__group">
-            <nav class="container">
-                <ul class="nav-mobile clearfix tk--hdr">
-                    <li class="nav-mobile__cinema6">
-                        <a href="#" title="Cinema6" class="nav-mobile__cinema6--link"><img src="assets/img/c6-brand--horizontal@2x.png" width="100%" alt="Cinema6"><span class="ir">Cinema6</span></a>
+        <header class="c6-masthead__group" ng-class="{'c6-view--hide': AppCtrl.activeExperience}">
+            <nav class="c6-view__container">
+                <ul class="c6-mobile-nav__group clearfix tk--hdr">
+                    <li class="c6-nav-brand c6-nav-brand--mobile">
+                        <a href="" title="Cinema6" class="c6-nav-brand__link">
+                            <img src="assets/img/c6-brand--horizontal@2x.png" width="100%" alt="Cinema6" class="c6-nav-brand__link">
+                            <span class="ir">Cinema6</span>
+                        </a>
                     </li>
-                    <li class="nav-mobile__dropdown">
-                        <button class="nav-mobile__dropdown--btn" ng-class="{'nav-mobile__dropdown--active': slideOpen}" type="button"><span class="ir">Dropdown</span></button>
-                    </li>
+                    <!--<li class="c6-mobile-nav__dropdown">
+                        <button ng-click="toggleSlide()" class="c6-mobile-nav__dropdown-btn" ng-class="{'c6-mobile-nav__dropdown--active': slideOpen}" type="button"><span class="ir">Dropdown</span></button>
+                    </li>-->
                 </ul>
-                <ul class="nav-prime clearfix tk--hdr">
-                    <li class="nav-prime__cinema6"><a href="#" title="Cinema6" class="nav-prime__cinema6--link"><img src="assets/img/c6-brand--horizontal@2x.png" width="100%" alt="Cinema6"><span class="ir">Cinema6</span></a></li>
-                    <li class="nav-prime__search">
-                        <form class="nav-search__group clearfix">
-                            <input class="nav-search__text-box" type="search" name="search" value="Search Cinema6">
-                            <button type="submit" class="nav-search--btn"><span class="ir">Search</span></button>
-                        </form>
+                <ul class="c6-main-nav__group clearfix tk--hdr">
+                    <li class="c6-nav-brand">
+                        <a href="" title="Cinema6" class="c6-nav-brand__link">
+                            <img src="assets/img/c6-brand--horizontal@2x.png" class="c6-nav-brand__link" width="100%" alt="Cinema6">
+                            <span class="ir">Cinema6</span>
+                        </a>
                     </li>
-                </ul><!--.nav-prime-->
-            </nav><!--.nav-prime__group-->
-        </header><!--.masthead__group-->
+                </ul><!--.c6-nav-prime-->
+            </nav>
+        </header><!--.c6-masthead__group-->
 
-        <section class="landing-hero__group">
-            <c6-experience content="AppCtrl.experience" active="AppCtrl.activeExperience"></c6-experience>
-        </section><!--.hero__group-->
 
-        <div ng-if="!AppCtrl.activeExperience" class="container">
+        <section class="c6-exp__group" ng-class="{'c6-exp__group--fullscreen': AppCtrl.activeExperience}">
+            <c6-experience class="c6-exp" content="AppCtrl.experience" active="AppCtrl.activeExperience"></c6-experience>
+        </section><!--.c6-exp__group-->
+
+        <article ng-if="!AppCtrl.activeExperience" class="c6-view__container" ng-class="{'c6-view--hide': AppCtrl.activeExperience}">
             <div class="grid">
-                <section class="video-info__group grid__item one-quarter lap--one-whole palm--one-whole">
-                    <h1 class="landing-section__hdr tk--hdr">About the Video</h1>
+                <aside class="video-info__group grid__item one-quarter lap--one-whole palm--one-whole">
+                    <h1 class="c6-copy__section-hdr tk--hdr">About the Video</h1>
                     <section class="social__group clearfix">
                         <!--<a href="#" class="social__action social__action--faves" title="1,234 Faves">1,234&nbsp;Faves</a>-->
-                        <a href="#" class="social__action social__action--likes" title="9,551 Likes">9,551&nbsp;Likes</a>
-                        <a href="#" class="social__action social__action--tweets" title="2,300 Tweets">2,300&nbsp;Tweets</a>
+                        <a href="" class="social__action social__action--likes" title="Share on Facebook">Share on Facebook</a>
+                        <a href="" class="social__action social__action--tweets" title="Tweet">Tweet</a>
                     </section>
                     <section class="vid-details">
-                        <p><strong>Published On:</strong> February 12, 2013</p>
-                        <p><strong>Published By:</strong> <a href="#">You!</a></p>
-                        <p><strong>Type:</strong> Whatever You Like</p>
+                        <p><a href="">
+                            <img>
+                        </a></p>
+                        <p>
+                            <strong>Published By:</strong> <a href="#" title="org name">{{AppCtrl.experience.org.name}}</a></p>
+                        <p><strong>Added:</strong> Feb 11, 2013</p>
+                        <p ng-show="AppCtrl.experience.createdWith"><strong>Created With:</strong> <a ng-href="{{AppCtrl.experience.createdWith.link}}" target="_blank" title="{{AppCtrl.experience.createdWith.name}}">{{AppCtrl.experience.createdWith.name}}</a></p>
                     </section>
-                </section><!--
+                </aside><!--
 
                 --><section ng-include="AppCtrl.html.middle"
                         class="grid__item one-half lap--one-whole palm--one-whole">
@@ -69,46 +75,51 @@
                         class="grid__item one-quarter lap--one-whole palm--one-whole">
                 </section>
             </div>
-        </div>
+        </article>
 
-        <footer class="footer__group">
-            <div class="container">
+        <footer class="c6-footer__group" ng-class="{'c6-view--hide': AppCtrl.activeExperience}">
+            <div class="c6-view__container">
                 <div class="grid">
-                    <nav class="grid__item one-sixth palm--one-half lap--one-third footer__has-divider">
-                        <h3 class="footer__hdr tk--hdr">Browse</h3>
+                    <nav class="grid__item one-sixth palm--one-half lap--one-third c6-footer-nav__group">
+                        <h3 class="c6-footer-nav__hdr tk--hdr">Browse</h3>
+                        <ul class="c6-footer-nav__links">
+                            <li class="c6-footer-nav__item c6-footer-nav__item--community"><a href="http://www.facebook.com/Cinema6Video" target="_blank" class="c6-footer-nav__link" title="Facebook">Link</a></li>
+                            <li class="c6-footer-nav__item c6-footer-nav__item--community"><a href="http://www.twitter.com/Cinema6Video" target="_blank" class="c6-footer-nav__link" title="Twitter">Link</a></li>
+                        </ul>
                     </nav>
-                    <nav class="grid__item one-sixth palm--one-half lap--one-third footer__has-divider">
-                        <h3 class="footer__hdr tk--hdr">Categories</h3>
+                    <nav class="grid__item one-sixth palm--one-half lap--one-third c6-footer-nav__group">
+                        <h3 class="c6-footer-nav__hdr tk--hdr">Categories</h3>
+                        <ul class="c6-footer-nav__links">
+                            <li class="c6-footer-nav__item c6-footer-nav__item--community"><a href="http://www.facebook.com/Cinema6Video" target="_blank" class="c6-footer-nav__link" title="Facebook">Link</a></li>
+                            <li class="c6-footer-nav__item c6-footer-nav__item--community"><a href="http://www.twitter.com/Cinema6Video" target="_blank" class="c6-footer-nav__link" title="Twitter">Link</a></li>
+                        </ul>
                     </nav>
-                    <aside class="grid__item one-sixth palm--one-half lap--one-third footer__has-divider">
-                        <h3 class="footer__hdr tk--hdr">Community</h3>
+                    <aside class="grid__item one-sixth palm--one-whole lap--one-third c6-footer-nav__group">
+                        <h3 class="c6-footer-nav__hdr tk--hdr">Community</h3>
+                        <ul class="c6-footer-nav__links">
+                            <li class="c6-footer-nav__item c6-footer-nav__item--community"><a href="http://www.facebook.com/Cinema6Video" target="_blank" class="c6-footer-nav__link" title="Facebook">Facebook</a></li>
+                            <li class="c6-footer-nav__item c6-footer-nav__item--community"><a href="http://www.twitter.com/Cinema6Video" target="_blank" class="c6-footer-nav__link" title="Twitter">Twitter</a></li>
+                            <!--<li class="c6-footer-nav__item c6-footer-nav__item--community"><a href="#" class="c6-footer-nav__link" title="Blog">Blog</a></li>
+                            <li class="c6-footer-nav__item c6-footer-nav__item--community"><a href="#" class="c6-footer-nav__link" title="Feedback">Feedback</a></li>-->
+                        </ul>
                     </aside>
-                    <aside class="grid__item one-sixth palm--one-half lap--one-half footer__has-divider">
-                        <h3 class="footer__hdr tk--hdr">Contact</h3>
-                        <p class="footer__contact">
-                            252 Nassau Street <br>
-                            2nd Floor <br>
-                            Princeton, NJ 08542
-                        </p>
-                        <p><a href="#" class="footer-links--link">info@cinema6.com</a></p>
-                    </aside>
-                    <div class="grid__item two-sixths palm--one-whole lap--one-half">
-                        <h3 class="footer__brand">
-                            <a ui-sref="home" class="footer__brand--link" title="Cinema6 - Where Video Goes to Play">
-                                <span class="c6-brand--vertical"><img class="c6-brand--vertical-img" src="assets/img/c6-brand--vertical@2x.png" width="100%"></span>
-                                <strong class="footer-brand__tagline tk--hdr">Where Video Goes to Play</strong>
+                    <div class="c6-footer-brand__group grid__item two-sixths palm--one-whole lap--one-whole">
+                        <h3 class="c6-footer-brand">
+                            <a href="" class="c6-footer-brand__link" title="Cinema6 - Where Video Goes to Play">
+                                <span class="c6-footer-brand__logo"><img class="c6-footer-brand__logo" src="assets/img/c6-brand--vertical@2x.png"></span>
+                                <strong class="c6-footer-brand__tagline tk--hdr">Where Video Goes to Play</strong>
                             </a>
                         </h3>
                     </div>
                 </div><!--.grid-->
-            </div><!--.container-->
-            <div class="fineprint__group">
+            </div><!--.c6-view__container-->
+            <div class="c6-fineprint__group">
                 &copy; Copyright 2013 Cinema6. All rights reserved. 
-                &nbsp;&nbsp;&nbsp;&nbsp; <a ui-sref="privacy" class="fineprint--link" title="Privacy Policy">Privacy Policy</a>
-                &nbsp;&nbsp;&bullet;&nbsp;&nbsp; <a ui-sref="terms" class="fineprint--link" title="Terms of Use">Terms of Use</a>
-                &nbsp;&nbsp;&bullet;&nbsp;&nbsp; Made with care in Princeton, NJ
+                &nbsp;&nbsp;&nbsp;&nbsp; <a href="" class="c6-fineprint__link" title="Privacy Policy">Privacy Policy</a>
+                &nbsp;&nbsp;&bullet;&nbsp;&nbsp; <a href="" class="c6-fineprint__link" title="Terms of Use">Terms of Use</a>
             </div>
         </footer>
+
 
         <script>
             window.__C6_APP_BASE_URL__ = 'assets';
