@@ -302,7 +302,7 @@
     c6-exp__group styles
     ========================================================================== */
     .c6-exp__group {
-        width:100%; height:42.375em; color:#fff; margin:0 0 3.25em; position: relative;
+        width:100%; height:42.375em; color:#fff; margin:0 0 3.25em; 
     }
         .c6-exp__group--fullscreen {
             width:100%; height:100%; position:absolute; top:0; left:0; overflow:hidden;
@@ -335,7 +335,7 @@
             overflow: hidden; background: transparent;
         }
             .c6-exp__frame--fullscreen {
-                position: absolute; top: 0; left: 0;
+                position: fixed; top: 0; left: 0;
             }
 
 /*  ==========================================================================
