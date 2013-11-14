@@ -22,7 +22,7 @@
             <nav class="c6-view__container">
                 <ul class="c6-mobile-nav__group clearfix tk--hdr">
                     <li class="c6-nav-brand c6-nav-brand--mobile">
-                        <a ui-sref="{{homeSref}}" title="Cinema6" class="c6-nav-brand__link">
+                        <a href="" title="Cinema6" class="c6-nav-brand__link">
                             <img src="assets/img/c6-brand--horizontal@2x.png" width="100%" alt="Cinema6" class="c6-nav-brand__link">
                             <span class="ir">Cinema6</span>
                         </a>
@@ -33,24 +33,11 @@
                 </ul>
                 <ul class="c6-main-nav__group clearfix tk--hdr">
                     <li class="c6-nav-brand">
-                        <a ui-sref="{{homeSref}}" title="Cinema6" class="c6-nav-brand__link">
+                        <a href="" title="Cinema6" class="c6-nav-brand__link">
                             <img src="assets/img/c6-brand--horizontal@2x.png" class="c6-nav-brand__link" width="100%" alt="Cinema6">
                             <span class="ir">Cinema6</span>
                         </a>
                     </li>
-                    <li class="c6-main-nav__prime clearfix">
-                        <ul class="c6-nav-prime__links">
-                            <li ng-repeat="link in nav" class="c6-nav-prime__item">
-                                <a ui-sref="{{link.sref}}" title="{{link.name}}" class="c6-nav-prime__link">{{link.name}}</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <!--<li class="c6-main-nav__search">
-                        <form class="c6-nav-search__group clearfix">
-                            <input class="c6-nav-search__text-box" type="search" name="search" value="Search Cinema6">
-                            <button type="submit" class="c6-nav-search__btn"><span class="ir">Search</span></button>
-                        </form>
-                    </li>-->
                 </ul><!--.c6-nav-prime-->
             </nav>
         </header><!--.c6-masthead__group-->
@@ -62,23 +49,21 @@
 
         <article ng-if="!AppCtrl.activeExperience" class="c6-view__container" ng-class="{'c6-view--hide': AppCtrl.activeExperience}">
             <div class="grid">
-                <aside c6-context="ExperienceCtrl.content as exp" class="video-info__group grid__item one-quarter lap--one-whole palm--one-whole">
+                <aside class="video-info__group grid__item one-quarter lap--one-whole palm--one-whole">
                     <h1 class="c6-copy__section-hdr tk--hdr">About the Video</h1>
                     <section class="social__group clearfix">
                         <!--<a href="#" class="social__action social__action--faves" title="1,234 Faves">1,234&nbsp;Faves</a>-->
-                        <a href="" ng-click="ExperienceCtrl.facebookShare()" class="social__action social__action--likes" title="Share on Facebook">Share on Facebook</a>
-                        <a href="" ng-click="ExperienceCtrl.twitterShare()" class="social__action social__action--tweets" title="Tweet">Tweet</a>
+                        <a href="" class="social__action social__action--likes" title="Share on Facebook">Share on Facebook</a>
+                        <a href="" class="social__action social__action--tweets" title="Tweet">Tweet</a>
                     </section>
                     <section class="vid-details">
-                        <p><a ui-sref="org({ orgUri: org.uri })">
-                            <img ng-src="{{assetUrl('experiences/hellraid/assets/techland__banner.jpg')}}" alt="{{org.name}}">
+                        <p><a href="">
+                            <img>
                         </a></p>
                         <p>
-                            <strong>Published By:</strong> <a href="#" title="org name">Techland</a></p>
+                            <strong>Published By:</strong> <a href="#" title="org name">{{AppCtrl.experience.org.name}}</a></p>
                         <p><strong>Added:</strong> Feb 11, 2013</p>
-                        <p c6-context="exp.createdWith as tech" ng-show="!!tech"><strong>Created With:</strong> <a ng-href="{{tech.link}}" target="_blank" title="{{tech.name}}">{{tech.name}}</a></p>
-                        <!--<p><strong>Type:</strong> {{exp.type}}</p>
-                        <c6-tag-list content="exp.tags"></c6-tag-list>-->
+                        <p ng-show="AppCtrl.experience.createdWith"><strong>Created With:</strong> <a ng-href="{{AppCtrl.experience.createdWith.link}}" target="_blank" title="{{AppCtrl.experience.createdWith.name}}">{{AppCtrl.experience.createdWith.name}}</a></p>
                     </section>
                 </aside><!--
 
@@ -120,7 +105,7 @@
                     </aside>
                     <div class="c6-footer-brand__group grid__item two-sixths palm--one-whole lap--one-whole">
                         <h3 class="c6-footer-brand">
-                            <a ui-sref="home" class="c6-footer-brand__link" title="Cinema6 - Where Video Goes to Play">
+                            <a href="" class="c6-footer-brand__link" title="Cinema6 - Where Video Goes to Play">
                                 <span class="c6-footer-brand__logo"><img class="c6-footer-brand__logo" src="assets/img/c6-brand--vertical@2x.png"></span>
                                 <strong class="c6-footer-brand__tagline tk--hdr">Where Video Goes to Play</strong>
                             </a>
@@ -130,8 +115,8 @@
             </div><!--.c6-view__container-->
             <div class="c6-fineprint__group">
                 &copy; Copyright 2013 Cinema6. All rights reserved. 
-                &nbsp;&nbsp;&nbsp;&nbsp; <a ui-sref="privacy" class="c6-fineprint__link" title="Privacy Policy">Privacy Policy</a>
-                &nbsp;&nbsp;&bullet;&nbsp;&nbsp; <a ui-sref="terms" class="c6-fineprint__link" title="Terms of Use">Terms of Use</a>
+                &nbsp;&nbsp;&nbsp;&nbsp; <a href="" class="c6-fineprint__link" title="Privacy Policy">Privacy Policy</a>
+                &nbsp;&nbsp;&bullet;&nbsp;&nbsp; <a href="" class="c6-fineprint__link" title="Terms of Use">Terms of Use</a>
             </div>
         </footer>
 
