@@ -118,6 +118,7 @@
 
         .service('C6Sandbox', ['$document', '$window', function($document, $window) {
             var self = this,
+                location = $window.location,
                 config = $document[0].getElementById('c6_config').innerHTML,
                 configObject = JSON.parse(config),
                 settings = JSON.parse($window.localStorage.getItem('__c6_sandbox__')),
@@ -138,7 +139,7 @@
                 copy = angular.copy(experience);
 
                 angular.forEach(img, function(src, name) {
-                    copy.img[name] = self.landingContentDir + '/' + src;
+                    copy.img[name] = location.origin + '/' + self.landingContentDir + '/' + src;
                 });
 
                 transformedExperiences[index] = copy;
