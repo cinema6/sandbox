@@ -1,16 +1,15 @@
 (function() {
     'use strict';
 
-
     angular.module('c6.sandbox', ['c6.ui'])
         .controller('AppController', ['$scope', 'C6Sandbox', 'C6ExperienceService', 'c6AniCache', 'c6Computed', '$window', '$location', '$log',
                             function(  $scope ,  C6Sandbox ,  C6ExperienceService ,  c6AniCache ,  c          ,  $window ,  $location ,  $log) {
             var self = this,
                 getLandingContent = function(section) {
                     var landingPageContent = this.experience.landingPageContent,
-                        landingContentDir = (C6Sandbox.__config__.landingContentDir || 'siteContent') + '/';
+                        asset = landingPageContent && landingPageContent[section];
 
-                    return landingPageContent && ('_landing/' + landingContentDir + landingPageContent[section]);
+                    return asset && (C6Sandbox.landingContentDir + '/' + asset);
                 }.bind(this);
 
             this.activeExperience = false;
@@ -113,19 +112,38 @@
 
             $scope.AppCtrl = this;
             $scope.assetUrl = function(url) {
-                var landingContentDir = (C6Sandbox.__config__.landingContentDir || 'siteContent') + '/';
-
-                return '_landing/' + landingContentDir + url;
+                return url && (C6Sandbox.landingContentDir + '/' + url);
             };
         }])
 
         .service('C6Sandbox', ['$document', '$window', function($document, $window) {
-            var config = $document[0].getElementById('c6_config').innerHTML,
+            var self = this,
+                config = $document[0].getElementById('c6_config').innerHTML,
                 configObject = JSON.parse(config),
-                settings = JSON.parse($window.localStorage.getItem('__c6_sandbox__'));
+                settings = JSON.parse($window.localStorage.getItem('__c6_sandbox__')),
+                transformedExperiences = {};
 
             function writeSettings() {
                 $window.localStorage.setItem('__c6_sandbox__', JSON.stringify(settings));
+            }
+
+            function transformExperience(experience, index) {
+                var img = experience.img,
+                    copy;
+
+                if (transformedExperiences[index]) {
+                    return transformedExperiences[index];
+                }
+
+                copy = angular.copy(experience);
+
+                angular.forEach(img, function(src, name) {
+                    copy.img[name] = self.landingContentDir + '/' + src;
+                });
+
+                transformedExperiences[index] = copy;
+
+                return copy;
             }
 
             if (!settings) {
@@ -140,12 +158,20 @@
 
             this.__config__ = configObject;
 
+            this.landingContentDir = '_landing/' + (configObject.landingContentDir || 'siteContent');
+
             this.getExperiences = function() {
                 return configObject.experiences;
             };
 
             this.getCurrentExperience = function() {
-                return configObject.experiences[settings.experienceIndex];
+                var experiences = configObject.experiences,
+                    index = settings.experienceIndex,
+                    experience = experiences[index];
+
+                if (!experience) { throw new RangeError('Could not find experience at index: ' + index + '.'); }
+
+                return transformExperience(experience, index);
             };
 
             this.setCurrentExperience = function(index) {
@@ -153,7 +179,7 @@
                 writeSettings();
                 $window.location.reload();
 
-                return configObject.experiences[index];
+                return this.getCurrentExperience();
             };
 
             this.clear = function() {
