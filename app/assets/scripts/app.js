@@ -340,6 +340,7 @@
                     respond({
                         success: true,
                         appData: {
+                            dubServiceUrl: 'http://dv-api1.cinema6.com',
                             experience: experience,
                             profile: c6BrowserInfo.profile
                         }
