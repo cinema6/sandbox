@@ -159,7 +159,7 @@
 
             this.__config__ = configObject;
 
-            this.landingContentDir = '_landing/' + (configObject.landingContentDir || 'siteContent');
+            this.landingContentDir = '/__dirname/' + (configObject.landingContentDir || 'siteContent');
 
             this.getExperiences = function() {
                 return configObject.experiences;
@@ -223,7 +223,7 @@
                     content: '=',
                     active: '='
                 },
-                template:  '<iframe class="c6-exp__frame"'+
+                template:  '<iframe name="experience" class="c6-exp__frame"'+
                             '   ng-class="{\'c6-exp__frame--fullscreen\': active}"'+
                             '   scrolling="no" ng-src="{{url}}">'+
                             '</iframe>',

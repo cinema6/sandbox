@@ -24,8 +24,8 @@ module.exports = function(config) {
                 res.writeHead(200, { 'content-type': 'text/html', 'content-length': Buffer.byteLength(fileString) });
                 res.end(fileString);
             });
-        } else if (!!filepath.match(/\/_landing/)) {
-            send(req, url.parse(req.url.replace('/_landing', '')).pathname)
+        } else if (!!filepath.match(/^\/__dirname/)) {
+            send(req, url.parse(req.url.replace(/^\/__dirname/, '')).pathname)
                 .root(process.cwd())
                 .pipe(res)
                 .on('error', function(err) {
