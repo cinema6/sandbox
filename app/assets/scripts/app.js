@@ -159,7 +159,7 @@
 
             this.__config__ = configObject;
 
-            this.landingContentDir = '/__dirname/' + (configObject.landingContentDir || 'siteContent');
+            this.landingContentDir = '__dirname/' + (configObject.landingContentDir || 'siteContent');
 
             this.getExperiences = function() {
                 return configObject.experiences;
