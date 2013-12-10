@@ -328,7 +328,7 @@
             }
         }
         /* 1051 - 1249 = uses default height of 642px */
-        @media only screen and (min-width:901px) and (max-width:1050px), only screen and (min-width:1200px) and (max-width:1400px) and (min-height:700px) and (max-height:900px) {
+        @media only screen and (min-width:901px) and (max-width:1050px) {
             .c6-exp__group, .exp-hero__vertical-spacer, .exp-hero__group {
                 height:36.375em; /*582px*/
             }
