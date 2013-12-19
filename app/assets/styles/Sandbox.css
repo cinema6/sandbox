@@ -302,58 +302,50 @@
     c6-exp__group styles
     ========================================================================== */
     .c6-exp__group {
-        width:100%; height:40.125em; /*642px*/ color:#fff; margin:0 0 3.25em; 
+        width:100%; color:#fff; margin:0 0 3.3125em; position:relative; overflow: hidden;
     }
         .c6-exp__group--fullscreen {
             width:100%; height:100%; position:absolute; top:0; left:0; overflow:hidden;
         }
-        @media only screen and (min-width:2001px) {
-            .c6-exp__group, .exp-hero__vertical-spacer, .exp-hero__group {
-                height:59.25em; /*948px*/
-            }
+    .c6-exp__group, .exp-hero__vertical-spacer, .exp-hero__group {
+        height:31.125em; /*498px*/
+    }
+    @media only screen and (min-width:2001px) {
+        .c6-exp__group {
+            height:52.5em; /*840px*/
         }
-        @media only screen and (min-width:1701px) and (max-width:2000px) {
-            .c6-exp__group, .exp-hero__vertical-spacer, .exp-hero__group {
-                height:51em; /*816px*/
-            }
+    }
+    @media only screen and (min-width:1701px) and (max-width:2000px) {
+        .c6-exp__group {
+            height:46.125em; /*738px*/
         }
-        @media only screen and (min-width:1401px) and (max-width:1700px) {
-            .c6-exp__group, .exp-hero__vertical-spacer, .exp-hero__group {
-                height:47.25em; /*756px*/
-            }
+    }
+    @media only screen and (min-width:1501px) and (max-width:1700px) {
+        .c6-exp__group {
+            height:40.125em; /*642px*/
         }
-        @media only screen and (min-width:1250px) and (max-width:1400px) {
-            .c6-exp__group, .exp-hero__vertical-spacer, .exp-hero__group {
-                height:43.5em; /*696px*/
-            }
+    }
+    @media only screen and (min-width:1301px) and (max-width:1500px) {
+        .c6-exp__group {
+            height:34.875em; /*558px*/
         }
-        /* 1051 - 1249 = uses default height of 642px */
-        @media only screen and (min-width:901px) and (max-width:1050px) {
-            .c6-exp__group, .exp-hero__vertical-spacer, .exp-hero__group {
-                height:36.375em; /*582px*/
-            }
+    }
+    /* 700 - 1300 = uses default height of 498px */
+    @media only screen and (max-width:699px) {
+        .c6-exp__group {
+            height:28em; /*448px*/
         }
-        @media only screen and (min-width:700px) and (max-width:900px) {
-            .c6-exp__group, .exp-hero__vertical-spacer, .exp-hero__group {
-                height:31.125em; /*498px*/
-            }
+    }
+    @media only screen and (max-device-width : 568px) and (orientation: landscape) {
+        .c6-exp__group {
+            height:18em; /*288px*/
         }
-        @media only screen and (max-width:699px) {
-            .c6-exp__group, .exp-hero__vertical-spacer, .exp-hero__group {
-                height:28em; /*448px*/
-            }
-        }
-        @media only screen and (max-device-width : 568px) and (orientation: landscape) {
-            .c6-exp__group, .exp-hero__vertical-spacer, .exp-hero__group {
-                height:18em; /*288px*/
-            }
-        }
+    }
         @media only screen and (min-width : 10px) {
             .c6-exp__group--fullscreen {
                 height:100%;
             }
         }
-
     .c6-exp {
         width:100%; height:100%;
     }
