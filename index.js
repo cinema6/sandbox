@@ -9,7 +9,7 @@ module.exports = function(config) {
 
         filepath = (filepath === '/') ? '/index.html' : filepath;
 
-        if ((filepath === '/index.html') (filepath === '/embed.html')) {
+        if ((filepath === '/index.html') || (filepath === '/embed.html')) {
             fs.readFile(path.resolve(__dirname, ('app' + filepath)), function(err, file) {
                 var fileString = (file instanceof Buffer) ? file.toString() : file;
 
