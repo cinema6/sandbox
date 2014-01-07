@@ -213,6 +213,47 @@
 
             $window.c6Sandbox = this;
         }])
+        
+        .directive('c6Embed', ['C6ExperienceService', 'C6Sandbox', 'c6BrowserInfo',
+        function                   ( C6ExperienceService ,  C6Sandbox ,  c6BrowserInfo ) {
+            return {
+                restrict: 'A',
+                scope: {
+                    content: '=',
+                },
+                link: function(scope, element) {
+                    var iframeWindow = element.prop('contentWindow');
+
+                    scope.$watch('content', function(experience, oldExperience) {
+                        if (experience) {
+                            scope.url = (function() {
+                                var prefix = experience.appUriPrefix,
+                                    postfix = (function() {
+                                        var uriArray = experience.appUri.split('/');
+
+                                        uriArray.shift();
+
+                                        return uriArray.join('/');
+                                    })();
+
+                                return prefix + postfix;
+                            })();
+
+                            c6BrowserInfo.profile.speed = C6Sandbox.getSpeed();
+
+                            C6ExperienceService._registerExperience(experience, iframeWindow);
+                        }
+                    });
+
+                    scope.$on('$destroy', function() {
+                        if (scope.content) {
+                            C6ExperienceService._deregisterExperience(scope.content.id);
+                        }
+                    });
+                }
+            };
+        }])
+
 
         .directive('c6Experience', ['C6ExperienceService', 'C6Sandbox', 'c6BrowserInfo',
         function                   ( C6ExperienceService ,  C6Sandbox ,  c6BrowserInfo ) {

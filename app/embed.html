@@ -7,13 +7,6 @@
         <link rel="stylesheet" href="./assets/lib/c6ui/style/css/csswizardry-grid.css">
         <link rel="stylesheet" href="./assets/styles/Sandbox.css">
         <link rel="stylesheet" ng-href="{{AppCtrl.stylesheet}}">
-        <style type="text/css">
-            iframe[name="experience"] {
-                min-height: 400px;
-                overflow: scroll;
-            }
-        </style>
-
     </head>
     <body>
 
@@ -22,7 +15,7 @@
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas commodo odio eu eros malesuada, vel consequat leo interdum. Vestibulum fringilla quam non nisl cursus, vel aliquet elit dictum.
         </section>
         <section>
-            <c6-experience class="c6-exp" content="AppCtrl.experience" active="AppCtrl.activeExperience"></c6-experience>
+            <iframe width="100%" height="600" c6-embed content="AppCtrl.experience" name="experience" scrolling="yes" ng-src="{{url}}"></iframe>
         </section>
         <section>
 Ut convallis eu lacus eu ultrices. Aliquam vel dolor nec nisl faucibus faucibus. Sed vestibulum scelerisque ultrices. Sed tellus leo, tincidunt et justo ut, luctus tempus justo. Suspendisse neque risus, vulputate vitae massa mollis, suscipit semper eros. Nam ut massa at odio venenatis iaculis. Phasellus pellentesque semper nunc, eu congue nisi fringilla et. 
