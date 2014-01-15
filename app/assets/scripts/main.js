@@ -18,7 +18,7 @@
             libUrl('modernizr/modernizr.custom.71747.js'),
             libUrl('jquery/2.0.3-0-gf576d00/jquery.js'),
             libUrl('angular/v1.2.8-0-g0f9a1c2/angular.js'),
-            libUrl('c6ui/v2.0.0-0-ge31e70c/c6uilib.js')
+            libUrl('c6ui/v2.1.0-0-g235a9de/c6uilib.js')
         ];
 
     function loadScriptsInOrder(scriptsList, done) {
@@ -43,7 +43,7 @@
         Modernizr.load({
             test: Modernizr.touch,
             nope: [
-                libUrl('c6ui/v2.0.0-0-ge31e70c/css/c6uilib--hover.min.css')
+                libUrl('c6ui/v2.1.0-0-g235a9de/css/c6uilib--hover.min.css')
             ],
             complete: function() {
                 loadScriptsInOrder(appScripts, function() {
