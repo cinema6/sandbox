@@ -220,6 +220,8 @@
 
                 writeSettings();
                 $window.location.reload();
+
+                return embedSize;
             };
 
             this.getEmbedSize = function() {
