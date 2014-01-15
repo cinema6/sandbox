@@ -99,26 +99,53 @@ This method sets the current experience to the experience object at the provided
 
 This method resets the Sandbox settings to their default.
 
-### getSiteUrl()
-**accepts**: *none*  
-**returns**: String
-
-This method returns the URL that the sandbox will respond with when your application requests the site's URL. By default, it is ````http://www.cinema6.com/experiences/{{currentExperience.uri || 'nouri'}}````.
-
-## setSiteUrl(url)
-**accepts**: *String* url  
-**returns**: String
-
-This method sets the URL that the sandbox will respond with when your application requests the site's URL.
-
 ### getSpeed()
 **accepts**: *none*  
 **returns**: String
 
 This method returns the speed (connection) that the sandbox will give to your application through the profile. By default, it is "fast".
 
-## setSpeed(speed)
+### setSpeed(speed)
 **accepts**: *String* speed  
 **returns**: String
 
 This method sets the speed that will be sent in the device profile to your application.
+
+### getDubUrl()
+**accepts**: *none*  
+**returns**: String
+
+This method returns the Dub URL the sandbox will give to the experience on the appData object.
+
+### setDubUrl(speed)
+**accepts**: *String* speed  
+**returns**: String
+
+This method sets and returns the Dub URL the sandbox will give to the experience on the appData object.
+
+### getEmbedMode()
+**accepts**: *none*  
+**returns**: Boolean
+
+This method returns true if the sanbox is in embed mode and false if it is not.
+
+### setEmbedMode(bool)
+**accepts**: *Boolean* bool  
+**returns**: Boolean
+
+This method sets whether or not the sandbox is in embed mode.
+
+### getEmbedSize()
+**accepts**: *none*  
+**returns**: Object
+
+This method returns the dimensions of the embed iframe as an object.
+
+### setEmbedSize(dimensions)
+**accepts**: *String* dimensions  
+**returns**: Boolean
+
+This method sets the dimensions of the embed iframe as a string. For example: to set the iframe to 100% wide by 500px tall, call the method like this:
+```javascript
+c6Sandbox.setEmbedSize('100%x500');
+```

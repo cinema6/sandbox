@@ -2,118 +2,95 @@
     'use strict';
 
     angular.module('c6.sandbox', ['c6.ui'])
-        .controller('AppController', ['$scope', 'C6Sandbox', 'C6ExperienceService', 'c6AniCache', 'c6Computed', '$window', '$location', '$log',
-                            function(  $scope ,  C6Sandbox ,  C6ExperienceService ,  c6AniCache ,  c          ,  $window ,  $location ,  $log) {
-            var self = this,
-                getLandingContent = function(section) {
-                    var landingPageContent = this.experience.landingPageContent,
-                        asset = landingPageContent && landingPageContent[section];
+        .config(['$provide', '$windowProvider', function($provide, $windowProvider) {
+            var config = {
+                modernizr: 'Modernizr'
+            },
+            $window = $windowProvider.$get();
 
-                    return asset && (C6Sandbox.landingContentDir + '/' + asset);
-                }.bind(this);
+            angular.forEach(config, function(value, key) {
+                if (angular.isString(value)) {
+                    $provide.value(key, $window[value]);
+                } else if (angular.isArray(value)) {
+                    $provide.factory(key, function() {
+                        var service = {};
 
-            this.activeExperience = false;
+                        angular.forEach(value, function(global) {
+                            service[global] = $window[global];
+                        });
 
-            this.experience = C6Sandbox.getCurrentExperience();
-
-            this.html = {
-                middle: getLandingContent('middle'),
-                right: getLandingContent('right')
-            };
-
-            this.stylesheet = getLandingContent('stylesheet');
-
-            this.panels = {
-                show: false,
-                duration: 0.6
-            };
-
-            this.experienceWantsBar = false;
-            this.c6BarInUse = false;
-            this.showC6Bar = c($scope, function(barInUse, experienceWantsBar, activeExperience) {
-                if (!activeExperience) {
-                    return false;
-                }
-
-                if (barInUse) {
-                    return true;
-                }
-
-                return experienceWantsBar;
-            }, ['AppCtrl.c6BarInUse', 'AppCtrl.experienceWantsBar', 'AppCtrl.activeExperience']);
-
-            this.gotoStart = function() {
-                C6ExperienceService.getSession(self.experience.id).then(function(session) {
-                    session.gotoState('start');
-                });
-            };
-
-            C6ExperienceService.getSession(self.experience.id).then(function(session) {
-                session.on('currentUrl', function(data, respond) {
-                    respond(C6Sandbox.getSiteUrl());
-                });
-
-                session.on('pendingPathComplete', function(done) {
-                    if (done) {
-                        self.activeExperience = true;
-                    }
-                });
-
-                session.on('pathChange', function(path) {
-                    $location.path(path).replace();
-                });
-
-                session.on('transitionState', function(wantState, respond) {
-                    var unregister,
-                        active = self.activeExperience,
-                        config = angular.isObject(wantState) ? wantState : { enter: wantState, duration: 0.6 },
-                        panelsEvent = config.enter ? 'panelsDown' : 'panelsUp';
-
-                    c6AniCache.enabled(true);
-
-                    self.panels.duration = config.duration;
-                    self.panels.show = config.enter;
-
-                    unregister = $scope.$on(panelsEvent, function() {
-                        if (config.enter && !active) {
-                            self.activeExperience = true;
-                        } else if (config.enter && active) {
-                            self.activeExperience = false;
-                        }
-                        c6AniCache.enabled(false);
-
-                        unregister();
-                        respond();
+                        return service;
                     });
-                });
+                }
+            });
+        }])
 
+        .config(['c6BrowserInfoProvider',
+        function( c6BrowserInfoProvider ) {
+            c6BrowserInfoProvider
+                .augmentProfile(['modernizr', '$window', 'c6UserAgent', 'C6Sandbox',
+                function        ( modernizr ,  $window ,  c6UserAgent ,  C6Sandbox ) {
+                    var screen = $window.screen,
+                        width = screen.width,
+                        height = screen.height,
+                        pixels = width * height;
+
+                    this.resolution = width + 'x' + height;
+
+                    this.flash = (function() {
+                        try {
+                            var flashObject = new $window.ActiveXObject('ShockwaveFlash.ShockwaveFlash');
+
+                            return !!flashObject;
+                        } catch(e) {
+                            return !!$window.navigator.mimeTypes['application/x-shockwave-flash'];
+                        }
+                    })();
+
+                    this.webp = modernizr.webp;
+
+                    this.device = (function() {
+                        var touch = this.touch;
+
+                        if (pixels <= 518400) {
+                            return 'phone';
+                        } else if (pixels <= 786432) {
+                            if (touch) {
+                                return 'tablet';
+                            } else {
+                                return 'netbook';
+                            }
+                        } else {
+                            return 'desktop';
+                        }
+                    }).call(this);
+
+                    this.cors = modernizr.cors;
+
+                    this.autoplay = !c6UserAgent.device.isMobile();
+
+                    this.speed = C6Sandbox.getSpeed();
+                }]);
+        }])
+
+        .controller('AppController', ['$scope', 'C6Sandbox', 'C6ExperienceService', '$log',
+        function                     ( $scope ,  C6Sandbox ,  C6ExperienceService ,  $log ) {
+            this.embedMode = C6Sandbox.getEmbedMode();
+            this.experience = C6Sandbox.getCurrentExperience();
+            this.fullscreen = false;
+            this.embedSize = C6Sandbox.getEmbedSize();
+
+            C6ExperienceService.getSession(this.experience.id).then(function(session) {
                 session.on('shareUrl', function(data) {
                     $log.log('C6SANDBOX: (shareUrl) SUCCESS! Got share request with data: ', data);
                 });
 
-                session.on('openExternalLink', function(config) {
-                    var win = $window.open(config.url, config.target);
-
-                    if (!win) {
-                        if ($window.confirm('You are about to leave Cinema6. Continue?')) {
-                            $window.open(config.url, config.target);
-                        }
-                    }
-                });
-
-                session.on('requestBar', function(showBar) {
-                    self.experienceWantsBar = showBar;
-                });
-            });
-
-            if ($location.path()) {
-                C6ExperienceService.pendingPath(C6Sandbox.getCurrentExperience().id, $location.path());
-            }
+                session.on('fullscreenMode', function(bool) {
+                    this.fullscreen = bool;
+                }.bind(this));
+            }.bind(this));
 
             $scope.AppCtrl = this;
-            $scope.assetUrl = function(url) {
-                return url && (C6Sandbox.landingContentDir + '/' + url);
-            };
         }])
 
         .service('C6Sandbox', ['$document', '$window', function($document, $window) {
@@ -139,7 +116,7 @@
                 copy = angular.copy(experience);
 
                 angular.forEach(img, function(src, name) {
-                    copy.img[name] = location.origin + '/' + self.landingContentDir + '/' + src;
+                    copy.img[name] = location.origin + '/' + self.c6CollateralDir + '/' + src;
                 });
 
                 transformedExperiences[index] = copy;
@@ -150,8 +127,13 @@
             if (!settings) {
                 settings = {
                     experienceIndex: 0,
-                    siteUrl: 'http://www.cinema6.com/experiences/' + (configObject.experiences[0].uri || 'nouri'),
-                    speed: 'fast'
+                    speed: 'fast',
+                    dubUrl: 'http://dv-api1.cinema6.com/dub',
+                    embedMode: false,
+                    embedSize: {
+                        width: '100%',
+                        height: '600'
+                    }
                 };
 
                 writeSettings();
@@ -159,7 +141,7 @@
 
             this.__config__ = configObject;
 
-            this.landingContentDir = '__dirname/' + (configObject.landingContentDir || 'siteContent');
+            this.c6CollateralDir = '__dirname/' + (configObject.c6CollateralDir || 'c6Content');
 
             this.getExperiences = function() {
                 return configObject.experiences;
@@ -189,16 +171,6 @@
                 $window.location.reload();
             };
 
-            this.setSiteUrl = function(url) {
-                settings.siteUrl = url;
-                writeSettings();
-                return settings.siteUrl;
-            };
-
-            this.getSiteUrl = function() {
-                return settings.siteUrl;
-            };
-
             this.getSpeed = function() {
                 return settings.speed;
             };
@@ -206,27 +178,85 @@
             this.setSpeed = function(speed) {
                 settings.speed = speed;
                 writeSettings();
-                $window.location.reload();
 
                 return settings.speed;
             };
 
+            this.getDubUrl = function() {
+                return settings.dubUrl;
+            };
+
+            this.setDubUrl = function(dubUrl) {
+                settings.dubUrl = dubUrl;
+                writeSettings();
+
+                return settings.dubUrl;
+            };
+
+            this.setEmbedMode = function(bool) {
+                settings.embedMode = !!bool;
+                writeSettings();
+                $window.location.reload();
+
+                return settings.embedMode;
+            };
+
+            this.getEmbedMode = function() {
+                return settings.embedMode;
+            };
+
+            this.setEmbedSize = function(dimensions) {
+                var dimensionsArray,
+                    embedSize = settings.embedSize;
+
+                if (!dimensions.match(/^\d+%?x\d+%?$/)) {
+                    throw new Error('Invalid dimensions! Try something like this: 100%x600');
+                }
+
+                dimensionsArray = dimensions.split('x');
+
+                embedSize.width = dimensionsArray[0];
+                embedSize.height = dimensionsArray[1];
+
+                writeSettings();
+                $window.location.reload();
+
+                return embedSize;
+            };
+
+            this.getEmbedSize = function() {
+                return settings.embedSize;
+            };
+
             $window.c6Sandbox = this;
         }])
-        
-        .directive('c6Embed', ['C6ExperienceService', 'C6Sandbox', 'c6BrowserInfo',
-        function                   ( C6ExperienceService ,  C6Sandbox ,  c6BrowserInfo ) {
+
+        .factory('c6Defines', ['C6Sandbox',
+        function              ( C6Sandbox ) {
+            var c6 = {
+                kEnv: 'dev',
+                kDubUrls: {}
+            };
+
+            Object.defineProperty(c6.kDubUrls, 'dev', {
+                get: function() {
+                    return C6Sandbox.getDubUrl();
+                }
+            });
+
+            return c6;
+        }])
+
+        .directive('c6Embed', ['C6ExperienceService',
+        function              ( C6ExperienceService ) {
             return {
                 restrict: 'A',
-                scope: {
-                    content: '=',
-                },
-                link: function(scope, element) {
+                link: function(scope, element, attrs) {
                     var iframeWindow = element.prop('contentWindow');
 
-                    scope.$watch('content', function(experience, oldExperience) {
+                    scope.$watch(attrs.c6Embed, function(experience) {
                         if (experience) {
-                            scope.url = (function() {
+                            element.prop('src', (function() {
                                 var prefix = experience.appUriPrefix,
                                     postfix = (function() {
                                         var uriArray = experience.appUri.split('/');
@@ -237,17 +267,17 @@
                                     })();
 
                                 return prefix + postfix;
-                            })();
-
-                            c6BrowserInfo.profile.speed = C6Sandbox.getSpeed();
+                            })());
 
                             C6ExperienceService._registerExperience(experience, iframeWindow);
                         }
                     });
 
                     scope.$on('$destroy', function() {
-                        if (scope.content) {
-                            C6ExperienceService._deregisterExperience(scope.content.id);
+                        var experience = scope.$eval(attrs.c6Embed);
+
+                        if (experience) {
+                            C6ExperienceService._deregisterExperience(experience.id);
                         }
                     });
                 }
@@ -265,13 +295,12 @@
                     active: '='
                 },
                 template:  '<iframe name="experience" class="c6-exp__frame"'+
-                            '   ng-class="{\'c6-exp__frame--fullscreen\': active}"'+
                             '   scrolling="no" ng-src="{{url}}">'+
                             '</iframe>',
                 link: function(scope, element) {
                     var iframeWindow = element.prop('contentWindow');
 
-                    scope.$watch('content', function(experience, oldExperience) {
+                    scope.$watch('content', function(experience) {
                         if (experience) {
                             scope.url = (function() {
                                 var prefix = experience.appUriPrefix,
@@ -298,118 +327,6 @@
                         }
                     });
                 }
-            };
-        }])
-
-        .service('C6ExperienceService', ['$q', 'postMessage', 'c6BrowserInfo',
-                                function( $q ,  postMessage ,  c6BrowserInfo) {
-            var self = this,
-                _private = {
-                    sessions: {},
-                    pendingGets: {},
-                    pendingPaths: {},
-
-                    decorateSession: function(session, experience) {
-                        session.experience = experience;
-                        session.ready = false;
-
-                        session.getLandingContent = function(section) {
-                            return session.request('landingContent', section);
-                        };
-
-                        session.getLandingStylesheet = function() {
-                            return session.request('landingStylesheet');
-                        };
-
-                        session.gotoState = function(state) {
-                            session.ping('gotoState', state);
-                        };
-                    }
-                };
-
-            /* @public */
-
-            this.getSession = function(expId) {
-                var deferred = $q.defer();
-
-                if (_private.sessions[expId]) {
-                    deferred.resolve(_private.sessions[expId]);
-                } else {
-                    _private.pendingGets[expId] = deferred;
-                }
-
-                return deferred.promise;
-            };
-
-            this.pendingPath = function(expId, path) {
-                var value;
-
-                if (path) {
-                    _private.pendingPaths[expId] = path;
-                } else {
-                    value = _private.pendingPaths[expId];
-
-                    delete _private.pendingPaths[expId];
-
-                    return value;
-                }
-            };
-
-            /* @private */
-
-            this._registerExperience = function(experience, expWindow) {
-                var session = postMessage.createSession(expWindow),
-                    expId = experience.id;
-
-                _private.decorateSession(session, experience);
-
-                _private.sessions[expId] = session;
-
-                session.once('handshake', function(data, respond) {
-                    var pendingPath = self.pendingPath(expId);
-
-                    if (pendingPath) {
-                        session.request('pendingPath', pendingPath).then(function(result) {
-                            session.emit('pendingPathComplete', result);
-                        });
-                    }
-
-                    session.ready = true;
-
-                    session.emit('ready', true);
-
-                    respond({
-                        success: true,
-                        appData: {
-                            dubServiceUrl: 'http://dv-api1.cinema6.com',
-                            experience: experience,
-                            profile: c6BrowserInfo.profile
-                        }
-                    });
-                });
-
-                if (_private.pendingGets[expId]) {
-                    _private.pendingGets[expId].resolve(session);
-
-                    delete _private.pendingGets[expId];
-                }
-
-                return session;
-            };
-
-            this._deregisterExperience = function(expId) {
-                var session = _private.sessions[expId];
-
-                postMessage.destroySession(session.id);
-
-                delete _private.sessions[expId];
-            };
-
-            /* WARNING!: This method is here solely so automated tests can make assetions on internal methods and state.
-             * If you need to use this method for any reason in production code, either you're not using this correctly,
-             * or I'm not giving you everything you need. Either way, talk to me! jminzner@cinema6.com.*/
-            this._private = function() {
-                return _private;
             };
         }]);
 })();
