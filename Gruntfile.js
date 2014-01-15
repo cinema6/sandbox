@@ -1,7 +1,8 @@
-var path = require('path'),
-    sandbox = require('./index.js');
+var sandbox = require('./index.js');
 
 module.exports = function(grunt) {
+    'use strict';
+
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
     grunt.initConfig({

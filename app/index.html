@@ -7,7 +7,14 @@
         <link rel="stylesheet" href="./assets/styles/Sandbox.css">
     </head>
     <body>
-        <c6-experience class="c6-exp" content="AppCtrl.experience" active="AppCtrl.activeExperience"></c6-experience>
+        <ng-switch on="AppCtrl.embedMode">
+            <div ng-switch-when="false">
+                <ng-include src="'assets/views/site.html'"></ng-include>
+            </div>
+            <div ng-switch-when="true">
+                <ng-include src="'assets/views/embed.html'"></ng-include>
+            </div>
+        </ng-switch>
 
         <script src="http://s3.amazonaws.com/c6.dev/ext/require/2.1.5/require.js" data-main="assets/scripts/main"></script>
         <!-- C6_SANDBOX_CONFIG -->
