@@ -88,6 +88,10 @@
                 session.on('fullscreenMode', function(bool) {
                     this.fullscreen = bool;
                 }.bind(this));
+
+                session.on('getCurrentUser', function(data, respond) {
+                    respond(C6Sandbox.getCurrentUser());
+                });
             }.bind(this));
 
             $scope.AppCtrl = this;
@@ -127,6 +131,7 @@
             if (!settings) {
                 settings = {
                     experienceIndex: 0,
+                    userIndex: 0,
                     speed: 'fast',
                     dubUrl: 'http://dv-api1.cinema6.com/dub',
                     embedMode: false,
@@ -163,6 +168,27 @@
                 $window.location.reload();
 
                 return this.getCurrentExperience();
+            };
+
+            this.getUsers = function() {
+                return configObject.users;
+            };
+
+            this.getCurrentUser = function() {
+                var index = settings.userIndex,
+                    user = configObject.users[index];
+
+                if (!user) { throw new RangeError('Could not find user at index: ' + index + '.'); }
+
+                return user;
+            };
+
+            this.setCurrentUser = function(index) {
+                settings.userIndex = index;
+                writeSettings();
+                $window.location.reload();
+
+                return this.getCurrentUser();
             };
 
             this.clear = function() {
