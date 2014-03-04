@@ -3,7 +3,7 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="http://s3.amazonaws.com/c6.dev/ext/angular/v1.2.8-0-g0f9a1c2/angular.js"></script>
-        <script src="http://s3.amazonaws.com/c6.dev/ext/c6ui/v2.1.0-0-g235a9de/c6uilib.js"></script>
+        <script src="http://s3.amazonaws.com/c6.dev/ext/c6ui/v2.4.0-0-gb74a3dd/c6uilib.js"></script>
 
         <style>
             html {
@@ -25,13 +25,9 @@
                             this.profile = data.profile;
                         }.bind(this));
 
-                        cinema6.getSession()
-                            .then(function(session) {
-                                return session.request('currentUser');
-                            })
-                            .then(function(user) {
-                                this.user = user;
-                            }.bind(this));
+                        cinema6.getUser().then(function(user) {
+                            this.user = user;
+                        }.bind(this));
 
                         this.experience = null;
                         this.profile = null;

@@ -89,7 +89,7 @@
                     this.fullscreen = bool;
                 }.bind(this));
 
-                session.on('currentUser', function(data, respond) {
+                session.on('getCurrentUser', function(data, respond) {
                     respond(C6Sandbox.getCurrentUser());
                 });
             }.bind(this));
