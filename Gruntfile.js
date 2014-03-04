@@ -37,6 +37,13 @@ module.exports = function(grunt) {
                     middleware: function() {
                         return [
                             sandbox({
+                                users: [
+                                    {
+                                        id: 'u-1b6445b25fb6cd',
+                                        firstName: 'Johnny',
+                                        lastName: 'Test-Monkey'
+                                    }
+                                ],
                                 experiences: [
                                     {
                                         id: 'e-8d29c9d3dad8d6',

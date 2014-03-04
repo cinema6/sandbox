@@ -25,8 +25,17 @@
                             this.profile = data.profile;
                         }.bind(this));
 
+                        cinema6.getSession()
+                            .then(function(session) {
+                                return session.request('currentUser');
+                            })
+                            .then(function(user) {
+                                this.user = user;
+                            }.bind(this));
+
                         this.experience = null;
                         this.profile = null;
+                        this.user = null;
 
                         this.toggleFullscreen = function() {
                             fullscreen = !fullscreen;
@@ -42,6 +51,7 @@
     <body>
         <p>Experience ID: {{AppCtrl.experience.id}}</p>
         <p>Browser Profile: {{AppCtrl.profile}}</p>
+        <p>Current User: {{AppCtrl.user}}</p>
         <nav>
             <button ng-click="AppCtrl.toggleFullscreen()">Toggle Fullscreen</button>
         </nav>
