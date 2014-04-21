@@ -95,7 +95,7 @@
             }
 
             C6ExperienceService.getSession(this.experience.id).then(function(session) {
-
+/*
                 session.once('ready', function(){
                     $window.c6SbGa(function(){
                         var tracker = $window.c6SbGa.getByName('c6sb'), clientId;
@@ -115,7 +115,7 @@
                     });
 
                 });
-
+*/
                 session.on('shareUrl', function(data) {
                     $log.log('C6SANDBOX: (shareUrl) SUCCESS! Got share request with data: ', data);
                 });
@@ -285,14 +285,15 @@
             return c6;
         }])
 
-        .directive('c6Embed', ['C6ExperienceService',
-        function              ( C6ExperienceService ) {
+        .directive('c6Embed', ['C6ExperienceService', '$window'
+        function              ( C6ExperienceService, $window ) {
             return {
                 restrict: 'A',
                 link: function(scope, element, attrs) {
                     var iframeWindow = element.prop('contentWindow');
 
                     scope.$watch(attrs.c6Embed, function(experience) {
+                        var session;
                         if (experience) {
                             element.prop('src', (function() {
                                 var prefix = experience.appUriPrefix,
@@ -307,7 +308,26 @@
                                 return prefix + postfix;
                             })());
 
-                            C6ExperienceService._registerExperience(experience, iframeWindow);
+                            session = C6ExperienceService
+                                        ._registerExperience(experience, iframeWindow);
+                            session.once('ready', function(){
+                                $window.c6SbGa(function(){
+                                    var tracker = $window.c6SbGa.getByName('c6sb'), clientId;
+                                    try {
+                                        clientId = tracker.get('clientId');
+                                    }catch(e){
+                                        
+                                    }
+
+                                    if (clientId){
+                                        session.ping('initAnalytics',{
+                                            accountId: C6Sandbox.gaAccountId,
+                                            clientId:   clientId
+                                        });
+                                    }
+                                });
+
+                            });
                         }
                     });
 
@@ -324,7 +344,8 @@
 
 
         .directive('c6Experience', ['C6ExperienceService', 'C6Sandbox', 'c6BrowserInfo',
-        function                   ( C6ExperienceService ,  C6Sandbox ,  c6BrowserInfo ) {
+                '$window',
+        function ( C6ExperienceService ,  C6Sandbox ,  c6BrowserInfo, $window ) {
             return {
                 restrict: 'E',
                 replace: true,
@@ -339,6 +360,7 @@
                     var iframeWindow = element.prop('contentWindow');
 
                     scope.$watch('content', function(experience) {
+                        var session;
                         if (experience) {
                             scope.url = (function() {
                                 var prefix = experience.appUriPrefix,
@@ -356,6 +378,24 @@
                             c6BrowserInfo.profile.speed = C6Sandbox.getSpeed();
 
                             C6ExperienceService._registerExperience(experience, iframeWindow);
+                            session.once('ready', function(){
+                                $window.c6SbGa(function(){
+                                    var tracker = $window.c6SbGa.getByName('c6sb'), clientId;
+                                    try {
+                                        clientId = tracker.get('clientId');
+                                    }catch(e){
+                                        
+                                    }
+
+                                    if (clientId){
+                                        session.ping('initAnalytics',{
+                                            accountId: C6Sandbox.gaAccountId,
+                                            clientId:   clientId
+                                        });
+                                    }
+                                });
+
+                            });
                         }
                     });
 
