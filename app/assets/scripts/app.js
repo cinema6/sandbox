@@ -95,27 +95,6 @@
             }
 
             C6ExperienceService.getSession(this.experience.id).then(function(session) {
-/*
-                session.once('ready', function(){
-                    $window.c6SbGa(function(){
-                        var tracker = $window.c6SbGa.getByName('c6sb'), clientId;
-                        try {
-                            clientId = tracker.get('clientId');
-                        }catch(e){
-                            
-                        }
-
-                        $log.info('Session ready, clientId: ', clientId);
-                        if (clientId){
-                            session.ping('initAnalytics',{
-                                accountId: C6Sandbox.gaAccountId,
-                                clientId:   clientId
-                            });
-                        }
-                    });
-
-                });
-*/
                 session.on('shareUrl', function(data) {
                     $log.log('C6SANDBOX: (shareUrl) SUCCESS! Got share request with data: ', data);
                 });
@@ -377,7 +356,9 @@
 
                             c6BrowserInfo.profile.speed = C6Sandbox.getSpeed();
 
-                            C6ExperienceService._registerExperience(experience, iframeWindow);
+                            session = C6ExperienceService
+                                ._registerExperience(experience, iframeWindow);
+
                             session.once('ready', function(){
                                 $window.c6SbGa(function(){
                                     var tracker = $window.c6SbGa.getByName('c6sb'), clientId;
