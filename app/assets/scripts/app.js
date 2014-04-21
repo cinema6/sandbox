@@ -87,7 +87,7 @@
                     'name'       : 'c6sb',
                     'cookieName' : '_c6_sandbox_ga_'
                 });
-                $window.c6SbGa('require','displayfeatures');
+                $window.c6SbGa('c6sb.require','displayfeatures');
                 $window.c6SbGa('c6sb.send', 'pageview', {
                     'page'  : '/sandbox/' + this.experience.id,
                     'title' : 'Sandbox: ' + this.experience.title || this.experience.id
