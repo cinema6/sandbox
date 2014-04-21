@@ -285,8 +285,8 @@
             return c6;
         }])
 
-        .directive('c6Embed', ['C6ExperienceService', '$window'
-        function              ( C6ExperienceService, $window ) {
+        .directive('c6Embed', ['C6ExperienceService', 'C6Sandbox', '$window'
+        function              ( C6ExperienceService, C6Sandbox, $window ) {
             return {
                 restrict: 'A',
                 link: function(scope, element, attrs) {
