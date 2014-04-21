@@ -73,14 +73,49 @@
                 }]);
         }])
 
-        .controller('AppController', ['$scope', 'C6Sandbox', 'C6ExperienceService', '$log',
-        function                     ( $scope ,  C6Sandbox ,  C6ExperienceService ,  $log ) {
+        .controller('AppController', ['$scope', 'C6Sandbox', 'C6ExperienceService',
+                '$log', '$window',
+        function ( $scope ,  C6Sandbox ,  C6ExperienceService ,  $log, $window ) {
             this.embedMode = C6Sandbox.getEmbedMode();
             this.experience = C6Sandbox.getCurrentExperience();
             this.fullscreen = false;
             this.embedSize = C6Sandbox.getEmbedSize();
 
+            if (C6Sandbox.useGA){
+                $log.log('Create GA tracker using accountid: ',C6Sandbox.gaAccountId);
+                $window.c6SbGa('create', C6Sandbox.gaAccountId, {
+                    'name'       : 'c6sb',
+                    'cookieName' : '_c6_sandbox_ga_'
+                });
+                $window.c6SbGa('c6sb.require','displayfeatures');
+                $window.c6SbGa('c6sb.send', 'pageview', {
+                    'page'  : '/sandbox/' + this.experience.id,
+                    'title' : 'Sandbox: ' + this.experience.title || this.experience.id
+                });
+            }
+
             C6ExperienceService.getSession(this.experience.id).then(function(session) {
+
+                session.once('ready', function(){
+                    $window.c6SbGa(function(){
+                        var tracker = $window.c6SbGa.getByName('c6sb'), clientId;
+                        try {
+                            clientId = tracker.get('clientId');
+                        }catch(e){
+                            
+                        }
+
+                        $log.info('Session ready, clientId: ', clientId);
+                        if (clientId){
+                            session.ping('initAnalytics',{
+                                accountId: C6Sandbox.gaAccountId,
+                                clientId:   clientId
+                            });
+                        }
+                    });
+
+                });
+
                 session.on('shareUrl', function(data) {
                     $log.log('C6SANDBOX: (shareUrl) SUCCESS! Got share request with data: ', data);
                 });
@@ -142,6 +177,9 @@
             this.__config__ = configObject;
 
             this.c6CollateralDir = '__dirname/' + (configObject.c6CollateralDir || 'c6Content');
+
+            this.gaAccountId = configObject.gaAccountId || 'UA-44457821-1';
+            this.useGA = (this.gaAccountId === 'none') ? false : !!(this.gaAccountId);
 
             this.getExperiences = function() {
                 return configObject.experiences;
