@@ -285,7 +285,7 @@
             return c6;
         }])
 
-        .directive('c6Embed', ['C6ExperienceService', 'C6Sandbox', '$window'
+        .directive('c6Embed', ['C6ExperienceService', 'C6Sandbox', '$window',
         function              ( C6ExperienceService, C6Sandbox, $window ) {
             return {
                 restrict: 'A',
