@@ -73,12 +73,25 @@
                 }]);
         }])
 
-        .controller('AppController', ['$scope', 'C6Sandbox', 'C6ExperienceService', '$log',
-        function                     ( $scope ,  C6Sandbox ,  C6ExperienceService ,  $log ) {
+        .controller('AppController', ['$scope', 'C6Sandbox', 'C6ExperienceService',
+                '$log', '$window',
+        function ( $scope ,  C6Sandbox ,  C6ExperienceService ,  $log, $window ) {
             this.embedMode = C6Sandbox.getEmbedMode();
             this.experience = C6Sandbox.getCurrentExperience();
             this.fullscreen = false;
             this.embedSize = C6Sandbox.getEmbedSize();
+
+            if (C6Sandbox.useGA){
+                $log.log('Create GA tracker using accountid: ',C6Sandbox.gaAccountId);
+                $window.c6SbGa('create', C6Sandbox.gaAccountId, {
+                    'name'       : 'c6sb',
+                    'cookieName' : '_c6_sandbox_ga_'
+                });
+                $window.c6SbGa('c6sb.send', 'pageview', {
+                    'page'  : '/sandbox/' + this.experience.id,
+                    'title' : 'Sandbox: ' + this.experience.title || this.experience.id
+                });
+            }
 
             C6ExperienceService.getSession(this.experience.id).then(function(session) {
                 session.on('shareUrl', function(data) {
@@ -142,6 +155,9 @@
             this.__config__ = configObject;
 
             this.c6CollateralDir = '__dirname/' + (configObject.c6CollateralDir || 'c6Content');
+
+            this.gaAccountId = configObject.gaAccountId || 'UA-44457821-1';
+            this.useGA = (this.gaAccountId === 'none') ? false : !!(this.gaAccountId);
 
             this.getExperiences = function() {
                 return configObject.experiences;
@@ -247,14 +263,15 @@
             return c6;
         }])
 
-        .directive('c6Embed', ['C6ExperienceService',
-        function              ( C6ExperienceService ) {
+        .directive('c6Embed', ['C6ExperienceService', 'C6Sandbox', '$window',
+        function              ( C6ExperienceService, C6Sandbox, $window ) {
             return {
                 restrict: 'A',
                 link: function(scope, element, attrs) {
                     var iframeWindow = element.prop('contentWindow');
 
                     scope.$watch(attrs.c6Embed, function(experience) {
+                        var session;
                         if (experience) {
                             element.prop('src', (function() {
                                 var prefix = experience.appUriPrefix,
@@ -269,7 +286,26 @@
                                 return prefix + postfix;
                             })());
 
-                            C6ExperienceService._registerExperience(experience, iframeWindow);
+                            session = C6ExperienceService
+                                        ._registerExperience(experience, iframeWindow);
+                            session.once('ready', function(){
+                                $window.c6SbGa(function(){
+                                    var tracker = $window.c6SbGa.getByName('c6sb'), clientId;
+                                    try {
+                                        clientId = tracker.get('clientId');
+                                    }catch(e){
+                                        
+                                    }
+
+                                    if (clientId){
+                                        session.ping('initAnalytics',{
+                                            accountId: C6Sandbox.gaAccountId,
+                                            clientId:   clientId
+                                        });
+                                    }
+                                });
+
+                            });
                         }
                     });
 
@@ -286,7 +322,8 @@
 
 
         .directive('c6Experience', ['C6ExperienceService', 'C6Sandbox', 'c6BrowserInfo',
-        function                   ( C6ExperienceService ,  C6Sandbox ,  c6BrowserInfo ) {
+                '$window',
+        function ( C6ExperienceService ,  C6Sandbox ,  c6BrowserInfo, $window ) {
             return {
                 restrict: 'E',
                 replace: true,
@@ -301,6 +338,7 @@
                     var iframeWindow = element.prop('contentWindow');
 
                     scope.$watch('content', function(experience) {
+                        var session;
                         if (experience) {
                             scope.url = (function() {
                                 var prefix = experience.appUriPrefix,
@@ -317,7 +355,27 @@
 
                             c6BrowserInfo.profile.speed = C6Sandbox.getSpeed();
 
-                            C6ExperienceService._registerExperience(experience, iframeWindow);
+                            session = C6ExperienceService
+                                ._registerExperience(experience, iframeWindow);
+
+                            session.once('ready', function(){
+                                $window.c6SbGa(function(){
+                                    var tracker = $window.c6SbGa.getByName('c6sb'), clientId;
+                                    try {
+                                        clientId = tracker.get('clientId');
+                                    }catch(e){
+                                        
+                                    }
+
+                                    if (clientId){
+                                        session.ping('initAnalytics',{
+                                            accountId: C6Sandbox.gaAccountId,
+                                            clientId:   clientId
+                                        });
+                                    }
+                                });
+
+                            });
                         }
                     });
 
