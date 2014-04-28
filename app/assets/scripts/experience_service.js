@@ -21,7 +21,7 @@
 
             /* @private */
 
-            this._registerExperience = function(experience, expWindow) {
+            this._registerExperience = function(experience, user, expWindow) {
                 var session = postMessage.createSession(expWindow),
                     expId = experience.id;
 
@@ -32,8 +32,9 @@
                         success: true,
                         appData: {
                             dubServiceUrl : c6Defines.kDubUrls[c6Defines.kEnv],
-                            experience: experience,
-                            profile: c6BrowserInfo.profile
+                            experience    : experience,
+                            user          : user,
+                            profile       : c6BrowserInfo.profile
                         }
                     });
                 });

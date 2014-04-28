@@ -4,7 +4,7 @@
 </section>
 <section>
     <iframe width="{{AppCtrl.embedSize.width}}" height="{{AppCtrl.embedSize.height}}"
-        c6-embed="AppCtrl.experience"
+        c6-embed="{ experience: AppCtrl.experience, user : AppCtrl.user }"
         name="experience"
         style="border: none;"
         ng-class="{'c6-view--fullscreen': AppCtrl.fullscreen}"

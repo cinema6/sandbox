@@ -14,6 +14,7 @@
             sessionOnceHandshakeHandler,
             sessionOnceReadyHandler,
             experience,
+            user,
             expWindow,
             promise,
             promiseThenSpy,
@@ -34,6 +35,10 @@
 
                 experience = {
                     id: 'e1'
+                };
+
+                user = {
+                    id: 'u1'
                 };
 
                 expWindow = {};
@@ -65,7 +70,11 @@
 
                 module('c6.ui', function($provide) {
                     $provide.value('postMessage', postMessage);
-                    $provide.value('c6BrowserInfo', c6BrowserInfo);
+                    $provide.provider('c6BrowserInfo', function(){
+                        this.augmentProfile = 
+                            jasmine.createSpy('c6BrowserInfoProvider.augmentProfile'); 
+                        this.$get = function() { return c6BrowserInfo; };
+                    });
                 });
 
                 module('c6.sandbox', function($provide) {
@@ -157,13 +166,13 @@
                     });
                 });
 
-                describe('_registerExperience(experience, expWindow)', function() {
+                describe('_registerExperience(experience, user, expWindow)', function() {
                     var returnedSession;
 
                     beforeEach(function() {
                         spyOn(_private, 'decorateSession');
 
-                        returnedSession = C6ExperienceService._registerExperience(experience, expWindow);
+                        returnedSession = C6ExperienceService._registerExperience(experience,user, expWindow);
                     });
 
                     it('should create a postMessage session with the window', function() {
