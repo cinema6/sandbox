@@ -78,6 +78,7 @@
         function ( $scope ,  C6Sandbox ,  C6ExperienceService ,  $log, $window ) {
             this.embedMode = C6Sandbox.getEmbedMode();
             this.experience = C6Sandbox.getCurrentExperience();
+            this.user       = C6Sandbox.getCurrentUser();
             this.fullscreen = false;
             this.embedSize = C6Sandbox.getEmbedSize();
 
@@ -140,6 +141,7 @@
             if (!settings) {
                 settings = {
                     experienceIndex: 0,
+                    userIndex: 0,
                     speed: 'fast',
                     dubUrl: 'http://dv-api1.cinema6.com/dub',
                     embedMode: false,
@@ -180,6 +182,28 @@
 
                 return this.getCurrentExperience();
             };
+
+            this.getUsers = function(){
+                return configObject.users;
+            }
+
+            this.getCurrentUser = function(){
+                var users = configObject.users,
+                    index = settings.userIndex,
+                    user = users[index];
+
+                if (!user) { throw new RangeError('Could not find user at index: ' + index + '.'); }
+                return user;
+            };
+
+            this.setCurrentUser = function(index) {
+                settings.userIndex = index;
+                writeSettings();
+                $window.location.reload();
+
+                return this.getCurrentUser();
+            };
+
 
             this.clear = function() {
                 settings = null;
@@ -270,8 +294,13 @@
                 link: function(scope, element, attrs) {
                     var iframeWindow = element.prop('contentWindow');
 
-                    scope.$watch(attrs.c6Embed, function(experience) {
-                        var session;
+                    scope.$watch(attrs.c6Embed, function(embedData) {
+                        var session,experience,user;
+                        if (!embedData){
+                            return;
+                        }
+                        experience = embedData.experience;
+                        user       = embedData.user;
                         if (experience) {
                             element.prop('src', (function() {
                                 var prefix = experience.appUriPrefix,
@@ -287,7 +316,7 @@
                             })());
 
                             session = C6ExperienceService
-                                        ._registerExperience(experience, iframeWindow);
+                                        ._registerExperience(experience, user, iframeWindow);
                             session.once('ready', function(){
                                 $window.c6SbGa(function(){
                                     var tracker = $window.c6SbGa.getByName('c6sb'), clientId;
@@ -337,8 +366,13 @@
                 link: function(scope, element) {
                     var iframeWindow = element.prop('contentWindow');
 
-                    scope.$watch('content', function(experience) {
-                        var session;
+                    scope.$watch('content', function(embedData) {
+                        var session,experience,user;
+                        if (!embedData){
+                            return;
+                        }
+                        experience = embedData.experience;
+                        user       = embedData.user;
                         if (experience) {
                             scope.url = (function() {
                                 var prefix = experience.appUriPrefix,
@@ -356,7 +390,7 @@
                             c6BrowserInfo.profile.speed = C6Sandbox.getSpeed();
 
                             session = C6ExperienceService
-                                ._registerExperience(experience, iframeWindow);
+                                ._registerExperience(experience, user, iframeWindow);
 
                             session.once('ready', function(){
                                 $window.c6SbGa(function(){
