@@ -312,7 +312,7 @@
                                         return uriArray.join('/');
                                     })();
 
-                                return prefix + postfix + '?kDebug=1';
+                                return prefix + postfix + '?kDebug=1?kDebug=1kEnv=dev';
                             })());
 
                             session = C6ExperienceService
@@ -384,7 +384,7 @@
                                         return uriArray.join('/');
                                     })();
 
-                                return prefix + postfix + '?kDebug=1';
+                                return prefix + postfix + '?kDebug=1?kDebug=1kEnv=dev';
                             })();
 
                             c6BrowserInfo.profile.speed = C6Sandbox.getSpeed();
