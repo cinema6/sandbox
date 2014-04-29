@@ -185,7 +185,7 @@
 
             this.getUsers = function(){
                 return configObject.users;
-            }
+            };
 
             this.getCurrentUser = function(){
                 var users = configObject.users,
@@ -312,7 +312,7 @@
                                         return uriArray.join('/');
                                     })();
 
-                                return prefix + postfix;
+                                return prefix + postfix + '?kDebug=1';
                             })());
 
                             session = C6ExperienceService
@@ -323,7 +323,7 @@
                                     try {
                                         clientId = tracker.get('clientId');
                                     }catch(e){
-                                        
+
                                     }
 
                                     if (clientId){
@@ -384,7 +384,7 @@
                                         return uriArray.join('/');
                                     })();
 
-                                return prefix + postfix;
+                                return prefix + postfix + '?kDebug=1';
                             })();
 
                             c6BrowserInfo.profile.speed = C6Sandbox.getSpeed();
@@ -398,7 +398,7 @@
                                     try {
                                         clientId = tracker.get('clientId');
                                     }catch(e){
-                                        
+
                                     }
 
                                     if (clientId){
