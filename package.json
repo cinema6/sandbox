@@ -1,6 +1,6 @@
 {
   "name": "c6-sandbox",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "description": "Connect middleware and angular app for developing cinema6 interactive video experiences in a mocked environment.",
   "main": "index.js",
   "repository": {
