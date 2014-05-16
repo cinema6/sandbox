@@ -337,7 +337,9 @@
                                     if (clientId){
                                         session.ping('initAnalytics',{
                                             accountId: C6Sandbox.gaAccountId,
-                                            clientId:   clientId
+                                            clientId:   clientId,
+                                            mxpnlAccountId : C6Sandbox.mxpnlAccountId,
+                                            mxpnlClientId  : mixpanel.get_distinct_id()
                                         });
                                     }
                                 });
@@ -412,7 +414,9 @@
                                     if (clientId){
                                         session.ping('initAnalytics',{
                                             accountId: C6Sandbox.gaAccountId,
-                                            clientId:   clientId
+                                            clientId:   clientId,
+                                            mxpnlAccountId : C6Sandbox.mxpnlAccountId,
+                                            mxpnlClientId  : mixpanel.get_distinct_id()
                                         });
                                     }
                                 });
