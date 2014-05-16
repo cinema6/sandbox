@@ -82,6 +82,11 @@
             this.fullscreen = false;
             this.embedSize = C6Sandbox.getEmbedSize();
 
+            if (C6Sandbox.useMxpnl){
+                $log.log('Create MixPanel tracker using accountid: ',C6Sandbox.mxpnlAccountId);
+                $window.mixpanel.init(C6Sandbox.mxpnlAccountId);
+            }
+
             if (C6Sandbox.useGA){
                 $log.log('Create GA tracker using accountid: ',C6Sandbox.gaAccountId);
                 $window.c6SbGa('create', C6Sandbox.gaAccountId, {
@@ -160,6 +165,9 @@
 
             this.gaAccountId = configObject.gaAccountId || 'UA-44457821-1';
             this.useGA = (this.gaAccountId === 'none') ? false : !!(this.gaAccountId);
+            
+            this.mxpnlAccountId = configObject.mxpnlAccountId || 'e148922f575be244b255145c42df097d';
+            this.useMxpnl = (this.mxpnlAccountId === 'none') ? false : !!(this.mxpnlAccountId);
 
             this.getExperiences = function() {
                 return configObject.experiences;
